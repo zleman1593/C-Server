@@ -9,11 +9,18 @@
 #include <netinet/in.h>
 #include <stdio.h>
 #include <unistd.h>
+#include <stdlib.h>
 #include <pthread.h>
 #include <iostream>
 //using namespace std;
 #define NUM_THREADS     5
-
+void *PrintHello(void *threadid)
+{
+    long tid;
+    tid = (long)threadid;
+    std::cout << "Hello World! Thread ID, " << tid <<    std::endl;
+    pthread_exit(NULL);
+}
 
 int main(int argc, const char * argv[]) {
     //Prints the comamnd line arguments
@@ -46,7 +53,11 @@ int main(int argc, const char * argv[]) {
     }
     
     struct sockaddr_in myaddr;
-    myaddr.sin_port = htons(8888); // use port 8888
+    /*if (argv[i]){
+    myaddr.sin_port = htons(argv[i]);
+    }else{*/
+    myaddr.sin_port = htons(8888); // use port default of 8888
+   // }
     myaddr.sin_family = AF_INET;
     myaddr.sin_addr.s_addr = htonl(INADDR_ANY);
     
@@ -59,17 +70,18 @@ int main(int argc, const char * argv[]) {
     
     return 0;
 }
+/*
 
+Forever loop:
+Listen for connections
+Accept new connection from incoming client
+Parse HTTP request
+Ensure well-formed request (return error otherwise)
+Determine if target file exists and if permissions are set properly (return error otherwise)
+Transmit contents of file to connect (by performing reads on the file and writes on the socket)
+Close the connection (if HTTP/1.0)
 
-
-void *PrintHello(void *threadid)
-{
-    long tid;
-    tid = (long)threadid;
-    std::cout << "Hello World! Thread ID, " << tid <<    std::endl;
-    pthread_exit(NULL);
-}
-
+*/
 
 
 
