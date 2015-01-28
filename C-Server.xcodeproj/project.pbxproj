@@ -23,7 +23,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		A20C757F1A798D4300D3F82A /* MakeFile.make */ = {isa = PBXFileReference; lastKnownFileType = text; path = MakeFile.make; sourceTree = "<group>"; };
+		A20C75801A799D1F00D3F82A /* MakeFile.make */ = {isa = PBXFileReference; lastKnownFileType = text; path = MakeFile.make; sourceTree = "<group>"; };
 		A23CB71B1A798C12009C5469 /* C-Server */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "C-Server"; sourceTree = BUILT_PRODUCTS_DIR; };
 		A23CB71E1A798C12009C5469 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -58,7 +58,7 @@
 		A23CB71D1A798C12009C5469 /* C-Server */ = {
 			isa = PBXGroup;
 			children = (
-				A20C757F1A798D4300D3F82A /* MakeFile.make */,
+				A20C75801A799D1F00D3F82A /* MakeFile.make */,
 				A23CB71E1A798C12009C5469 /* main.cpp */,
 			);
 			path = "C-Server";
