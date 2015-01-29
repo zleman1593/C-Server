@@ -7,6 +7,7 @@
 //
 #include <fcntl.h>
 #include <netinet/in.h>
+#include <sys/types.h>
 #include <stdio.h>
 #include <unistd.h>
 #include <stdlib.h>
@@ -15,34 +16,23 @@
 //using namespace std;
 #define NUM_THREADS     5
 #define MAX_BACKLOG     10
-void *PrintHello(void *threadid)
+void *handeRequest(void *threadid)
 {
     long tid;
     tid = (long)threadid;
-    std::cout << "Hello World! Thread ID, " << tid <<    std::endl;
+    std::cout << "Handeling Request! Socket Descriptor, " << tid <<    std::endl;
     pthread_exit(NULL);
 }
 
 int main(int argc, const char * argv[]) {
     //Prints the comamnd line arguments
-   std::cout << "argc = " << argc << std::endl;
+    std::cout << "argc = " << argc << std::endl;
     for(int i = 0; i < argc; i++)
         std::cout << "argv[" << i << "] = " << argv[i] << std::endl;
     
     
-    // multithreading example
-    pthread_t threads[NUM_THREADS];
-    int rc;
-    int i;
-    for( i=0; i < NUM_THREADS; i++ ){
-        std::cout << "main() : creating thread, " << i <<    std::endl;
-        rc = pthread_create(&threads[i], NULL, PrintHello, (void *)i);
-        if (rc){
-            std::cout << "Error:unable to create thread," << rc <<    std::endl;
-            exit(-1);
-        }
-    }
-    pthread_exit(NULL);
+    
+    
     
     // Create socket
     int sock_fd = socket(AF_INET, SOCK_STREAM, 0);
@@ -65,7 +55,7 @@ int main(int argc, const char * argv[]) {
         // error opening socket
         return -1;
     }
-  
+    
     if(int listen_begin = listen(sock_fd, MAX_BACKLOG) < 0)
     {
         std::cout << "Error while establishing listening socket" << std::endl;
@@ -74,35 +64,52 @@ int main(int argc, const char * argv[]) {
     
     while(true)
     {
+        int newSocket = accept(sock_fd, (struct sockaddr*) &myaddr, (socklen_t *) sizeof(myaddr));
         
-        int start = connect(sock_fd, (struct sockaddr*) &myaddr, sizeof(myaddr));
+        if( newSocket < 0)
+        {
+            std::cout << "Error while accepting" << std::endl;
+            return -1;
+        } else{
+            
+            pthread_t newThread;
+            std::cout << "Creating  new thread " <<    std::endl;
+            int rc = pthread_create(&newThread, NULL, handeRequest, (void *)newSocket);
+            if (rc){
+                std::cout << "Error:unable to create thread," << rc <<  std::endl;
+                exit(-1);
+            }
+            
+            
+        }
+        
     }
     
-    
+    //close();
     
     std::cout <<"End!\n";
     
     return 0;
     
 }
-    
 
-  
 
-    
+
+
+
 
 /*
-
-Forever loop:
-Listen for connections
-Accept new connection from incoming client
-Parse HTTP request
-Ensure well-formed request (return error otherwise)
-Determine if target file exists and if permissions are set properly (return error otherwise)
-Transmit contents of file to connect (by performing reads on the file and writes on the socket)
-Close the connection (if HTTP/1.0)
-
-*/
+ 
+ Forever loop:
+ Listen for connections
+ Accept new connection from incoming client
+ Parse HTTP request
+ Ensure well-formed request (return error otherwise)
+ Determine if target file exists and if permissions are set properly (return error otherwise)
+ Transmit contents of file to connect (by performing reads on the file and writes on the socket)
+ Close the connection (if HTTP/1.0)
+ 
+ */
 
 
 
