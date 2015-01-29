@@ -38,7 +38,7 @@ int main(int argc, const char * argv[]) {
         std::cout << "argv[" << i << "] = " << argv[i] << std::endl;
     
     
-    // Create socket
+    // Create socket to listen for connections
     int sock_fd = socket(AF_INET, SOCK_STREAM, 0);
     if (sock_fd < 0) {
         printf("error opening socket\n");
@@ -65,6 +65,7 @@ int main(int argc, const char * argv[]) {
         std::cout << "Error while establishing listening socket" << std::endl;
         return -1;
     }
+    
     int adressSize = sizeof(myaddr);
     int *size = &adressSize;
     
