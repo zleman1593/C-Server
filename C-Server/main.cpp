@@ -16,12 +16,14 @@
 //using namespace std;
 #define NUM_THREADS     5
 #define MAX_BACKLOG     10
+
 void *handeRequest(void *threadid)
 {
     long tid;
     tid = (long)threadid;
     std::cout << "Handeling Request! Socket Descriptor, " << tid <<    std::endl;
-    int getMsg = recv(sock_fd, buf, buflen, 0);
+    char* databuf[1024];
+    int getMsg = recv(sock_fd, databuf, sizeof(databuf), 0);
     if (getMsg < 0)
     {
         cout << "Error while recieving HTTP request" << endl;
