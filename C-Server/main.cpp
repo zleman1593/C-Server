@@ -31,9 +31,6 @@ int main(int argc, const char * argv[]) {
         std::cout << "argv[" << i << "] = " << argv[i] << std::endl;
     
     
-    
-    
-    
     // Create socket
     int sock_fd = socket(AF_INET, SOCK_STREAM, 0);
     if (sock_fd < 0) {
@@ -64,9 +61,9 @@ int main(int argc, const char * argv[]) {
     
     while(true)
     {
-        int newSocket = accept(sock_fd, (struct sockaddr*) &myaddr, (socklen_t *) sizeof(myaddr));
+        int newSocketfd = accept(sock_fd, (struct sockaddr*) &myaddr, (socklen_t *) sizeof(myaddr));
         
-        if( newSocket < 0)
+        if( newSocketfd < 0)
         {
             std::cout << "Error while accepting" << std::endl;
             return -1;
@@ -74,13 +71,13 @@ int main(int argc, const char * argv[]) {
             
             pthread_t newThread;
             std::cout << "Creating  new thread " <<    std::endl;
-            int rc = pthread_create(&newThread, NULL, handeRequest, (void *)newSocket);
+            int rc = pthread_create(&newThread, NULL, handeRequest, (void *)newSocketfd);
             if (rc){
                 std::cout << "Error:unable to create thread," << rc <<  std::endl;
                 exit(-1);
             }
             
-            
+
         }
         
     }
