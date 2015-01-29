@@ -74,6 +74,7 @@ int main(int argc, const char * argv[]) {
     
     while(true)
     {
+        
         int start = connect(sock_fd, (struct sockaddr*) &myaddr, sizeof(myaddr));
     }
     
@@ -87,22 +88,7 @@ int main(int argc, const char * argv[]) {
     
 
   
-    
 
-    
-        
-       
-    
-    
-        
-    
-
-       
-        
-        
-    
-
-    
     
 
 /*
