@@ -14,6 +14,7 @@
 #include <iostream>
 //using namespace std;
 #define NUM_THREADS     5
+#define MAX_BACKLOG     10
 void *PrintHello(void *threadid)
 {
     long tid;
@@ -34,18 +35,22 @@ int main(int argc, const char * argv[]) {
     int rc;
     int i;
     for( i=0; i < NUM_THREADS; i++ ){
-           std::cout << "main() : creating thread, " << i <<    std::endl;
+        std::cout << "main() : creating thread, " << i <<    std::endl;
         rc = pthread_create(&threads[i], NULL, PrintHello, (void *)i);
         if (rc){
-               std::cout << "Error:unable to create thread," << rc <<    std::endl;
+            std::cout << "Error:unable to create thread," << rc <<    std::endl;
             exit(-1);
         }
     }
     pthread_exit(NULL);
     
     
+    while (true) {
+  
     
-    // socket example
+
+    
+    // Create socket
     int sock_fd = socket(AF_INET, SOCK_STREAM, 0);
     if (sock_fd < 0) {
         printf("error opening socket\n");
@@ -60,16 +65,29 @@ int main(int argc, const char * argv[]) {
    // }
     myaddr.sin_family = AF_INET;
     myaddr.sin_addr.s_addr = htonl(INADDR_ANY);
-    
+        
+    //Bind Socket
     if(bind(sock_fd, (struct sockaddr*) &myaddr, sizeof(myaddr)) < 0) {
         // error opening socket
         return -1;
     }
+        
+        int listen_Id = listen(sock_fd, MAX_BACKLOG);
+    
+    
+        
     
     std::cout <<"opened and bound socket!\n";
     
     return 0;
-}
+       
+        
+        
+    }
+    }
+    
+    
+
 /*
 
 Forever loop:
