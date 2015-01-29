@@ -17,19 +17,46 @@
 #define NUM_THREADS     5
 #define MAX_BACKLOG     10
 
+
+void error(const char *msg)
+{
+    perror(msg);
+    exit(1);
+}
+
 void *handelRequest(void *sock_fd)
 {
+    long sock;
+    sock = (long)sock_fd;
+    
+    int n;
+    char buffer[256];
+    
+    bzero(buffer,256);
+    
+    n = read(sock,buffer,255);
+    
+    if (n < 0) error("ERROR reading from socket");
+    //printf("Here is the message: %s\n",buffer);
+    
 
-    std::cout << "Handeling Request! Socket Descriptor, "  <<    std::endl;
+    std::cout << "Handeling Request! Socket Descriptor: "  << sock <<    std::endl;
+    
+     n = write(sock,"Successful message: ",18);
+        n = n + write(sock,buffer,18);
+    if (n < 0) {error("ERROR writing to socket");}
+    
     char* databuf[1024];
-   /* int getMsg = recv(sock_fd, databuf, sizeof(databuf), 0);
-    if (getMsg < 0)
-    {
-        std::cout << "Error while recieving HTTP request" << std::endl;
-        exit(-1); //or break?
-    }  */
+    /* int getMsg = recv(sock_fd, databuf, sizeof(databuf), 0);
+     if (getMsg < 0)
+     {
+     std::cout << "Error while recieving HTTP request" << std::endl;
+     exit(-1); //or break?
+     }  */
     pthread_exit(NULL);
 }
+
+
 
 int main(int argc, const char * argv[]) {
     //Prints the comamnd line arguments
@@ -85,10 +112,10 @@ int main(int argc, const char * argv[]) {
             if (rc){
                 std::cout << "Error:unable to create thread," << rc <<  std::endl;
                 exit(-1);
-            } 
+            }
         }
         
-
+        
         
         
     }
