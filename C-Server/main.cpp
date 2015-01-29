@@ -21,6 +21,12 @@ void *handeRequest(void *threadid)
     long tid;
     tid = (long)threadid;
     std::cout << "Handeling Request! Socket Descriptor, " << tid <<    std::endl;
+    int getMsg = recv(sock_fd, buf, buflen, 0);
+    if (getMsg < 0)
+    {
+        cout << "Error while recieving HTTP request" << endl;
+        exit(-1); //or break?
+    }  
     pthread_exit(NULL);
 }
 
@@ -75,15 +81,7 @@ int main(int argc, const char * argv[]) {
             if (rc){
                 std::cout << "Error:unable to create thread," << rc <<  std::endl;
                 exit(-1);
-            }
-            
-            int getMsg = recv(sock_fd, buf, buflen, 0);
-            if (getMsg < 0)
-            {
-                cout << "Error while recieving HTTP request" << endl;
-                exit(-1); //or break?
-            }    
-
+            } 
         }
         
     }
