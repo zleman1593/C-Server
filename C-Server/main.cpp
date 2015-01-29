@@ -77,6 +77,12 @@ int main(int argc, const char * argv[]) {
                 exit(-1);
             }
             
+            int getMsg = recv(sock_fd, buf, buflen, 0);
+            if (getMsg < 0)
+            {
+                cout << "Error while recieving HTTP request" << endl;
+                exit(-1); //or break?
+            }    
 
         }
         
