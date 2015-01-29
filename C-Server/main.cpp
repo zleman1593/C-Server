@@ -17,18 +17,17 @@
 #define NUM_THREADS     5
 #define MAX_BACKLOG     10
 
-void *handeRequest(void *threadid)
+void *handelRequest(void *sock_fd)
 {
-    long tid;
-    tid = (long)threadid;
-    std::cout << "Handeling Request! Socket Descriptor, " << tid <<    std::endl;
+
+    std::cout << "Handeling Request! Socket Descriptor, "  <<    std::endl;
     char* databuf[1024];
-    int getMsg = recv(sock_fd, databuf, sizeof(databuf), 0);
+   /* int getMsg = recv(sock_fd, databuf, sizeof(databuf), 0);
     if (getMsg < 0)
     {
-        cout << "Error while recieving HTTP request" << endl;
+        std::cout << "Error while recieving HTTP request" << std::endl;
         exit(-1); //or break?
-    }  
+    }  */
     pthread_exit(NULL);
 }
 
@@ -66,10 +65,12 @@ int main(int argc, const char * argv[]) {
         std::cout << "Error while establishing listening socket" << std::endl;
         return -1;
     }
+    int adressSize = sizeof(myaddr);
+    int *size = &adressSize;
     
     while(true)
     {
-        int newSocketfd = accept(sock_fd, (struct sockaddr*) &myaddr, (socklen_t *) sizeof(myaddr));
+        int newSocketfd = accept(sock_fd, (struct sockaddr*) &myaddr, (socklen_t *) &size );
         
         if( newSocketfd < 0)
         {
@@ -79,12 +80,15 @@ int main(int argc, const char * argv[]) {
             
             pthread_t newThread;
             std::cout << "Creating  new thread " <<    std::endl;
-            int rc = pthread_create(&newThread, NULL, handeRequest, (void *)newSocketfd);
+            int rc = pthread_create(&newThread, NULL, handelRequest, (void *)newSocketfd);
             if (rc){
                 std::cout << "Error:unable to create thread," << rc <<  std::endl;
                 exit(-1);
             } 
         }
+        
+
+        
         
     }
     
