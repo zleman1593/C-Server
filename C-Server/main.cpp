@@ -44,12 +44,6 @@ int main(int argc, const char * argv[]) {
     }
     pthread_exit(NULL);
     
-    
-    while (true) {
-  
-    
-
-    
     // Create socket
     int sock_fd = socket(AF_INET, SOCK_STREAM, 0);
     if (sock_fd < 0) {
@@ -59,32 +53,55 @@ int main(int argc, const char * argv[]) {
     
     struct sockaddr_in myaddr;
     /*if (argv[i]){
-    myaddr.sin_port = htons(argv[i]);
-    }else{*/
+     myaddr.sin_port = htons(argv[i]);
+     }else{*/
     myaddr.sin_port = htons(8888); // use port default of 8888
-   // }
+    // }
     myaddr.sin_family = AF_INET;
     myaddr.sin_addr.s_addr = htonl(INADDR_ANY);
-        
+    
     //Bind Socket
     if(bind(sock_fd, (struct sockaddr*) &myaddr, sizeof(myaddr)) < 0) {
         // error opening socket
         return -1;
     }
-        
-        int listen_Id = listen(sock_fd, MAX_BACKLOG);
+  
+    if(int listen_begin = listen(sock_fd, MAX_BACKLOG) < 0)
+    {
+        std::cout << "Error while establishing listening socket" << std::endl;
+        return -1;
+    }
+    
+    while(true)
+    {
+        int start = connect(sock_fd, (struct sockaddr*) &myaddr, sizeof(myaddr));
+    }
     
     
-        
     
-    std::cout <<"opened and bound socket!\n";
+    std::cout <<"End!\n";
     
     return 0;
+    
+}
+    
+
+  
+    
+
+    
+        
+       
+    
+    
+        
+    
+
        
         
         
-    }
-    }
+    
+
     
     
 
