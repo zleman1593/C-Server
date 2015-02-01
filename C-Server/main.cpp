@@ -27,7 +27,6 @@ void error(const char *msg)
 
 void *handelRequest(void *sock_fd)
 {
-//    long sock;
     long sock = (long)sock_fd;
 
     char buffer[256];
@@ -62,24 +61,27 @@ void *handelRequest(void *sock_fd)
         }
         i = start;
         std::cout << "path: " << urlstr << std::endl;
+        //CHECK IF URL PATH IS VALID
         while (isspace(buffer[i])) {
             i++;
         }
         //get HTTP type
         char* httpstr = (char*) malloc(n);
         it = 0;
-        while (isspace(buffer[i]) == 0) {
+        while ((buffer[i]) == 0) {
             httpstr[it] = buffer[i];
             it++;
             i++;
         }
         std::cout << "HTTP Version: " << httpstr << std::endl;
-        
+        //determine HTTP version
         
     }
     else
     {
-        //no valid request: print out proper error
+        //no valid request (400)
+        std::cout << "400: Bad Request" << std::endl;
+        //need to support 200 (everything ok), 404 (not found), 403 (forbidden, but request correct), and 400 (bad request) status codes
     }
     
     if (n < 0) error("ERROR reading from socket");
