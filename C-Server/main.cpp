@@ -61,6 +61,7 @@ void *handelRequest(void *sock_fd)
         }
         i = start;
         std::cout << "path: " << urlstr << std::endl;
+        //MAKE SURE WE CHECK URL PATH FITS PATH PATTERN
         while (isspace(buffer[i])) {
             i++;
         }
@@ -77,7 +78,16 @@ void *handelRequest(void *sock_fd)
         if (strcmp(httpstr, "HTTP/1.0") == 0 || strcmp(httpstr, "HTTP/1.1") == 0) {
             //HTTP request ok
             //try to get file path
+            FILE *fs = fopen(urlstr, "r");
+            if (fs == NULL) {
+                //could be 404, 403, 401
+                std::cout << "404: Not Found" << std::endl;
+            }
             
+            if(write(sock, urlstr, sizeof(urlstr)) < 0)
+            {
+                std::cout << "Error while writing back to socket" << std::endl;
+            }
             //if no such file path, 404
             //file path found, 200
         }
@@ -91,7 +101,7 @@ void *handelRequest(void *sock_fd)
     {
         //no valid request (400)
         std::cout << "400: Bad Request" << std::endl;
-        //need to support 200 (everything ok), 404 (not found), 403 (forbidden, but request correct), and 400 (bad request) status codes
+        //need to support 200 (everything ok), 404 (not found), 403 (forbidden, but request correct), 401 (invalid credentials) and 400 (bad request) status codes
     }
     
     if (n < 0) error("ERROR reading from socket");
