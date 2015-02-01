@@ -89,6 +89,8 @@ void *handelRequest(void *sock_fd)
             std::rewind(fs);
             std::fread(&contents[0], 1, contents.size(), fs);
             std::cout << contents << std::endl;
+            
+            write(sock, &contents, contents.size());
 //            fseek (fs , 0 , SEEK_END);
 //            long lSize = ftell (fs);
 //            rewind (fs);
@@ -101,10 +103,10 @@ void *handelRequest(void *sock_fd)
 //                fputs (teststring , stdout);
 //            }
             
-            if(write(sock, urlstr, sizeof(urlstr)) < 0)
-            {
-                std::cout << "Error while writing back to socket" << std::endl;
-            }
+//            if(write(sock, urlstr, sizeof(urlstr)) < 0)
+//            {
+//                std::cout << "Error while writing back to socket" << std::endl;
+//            }
             //if no such file path, 404
             //file path found, 200
         }
@@ -127,7 +129,7 @@ void *handelRequest(void *sock_fd)
 
     std::cout << "Handeling Request! Socket Descriptor: "  << sock <<    std::endl;
     
-     n = write(sock,"Successful message: ",19);
+     //n = write(sock, contents, contents.size());
         n = n + write(sock,&buffer,18);
     if (n < 0) {error("ERROR writing to socket");}
     
