@@ -67,7 +67,7 @@ void *handelRequest(void *sock_fd)
         //get HTTP type
         char* httpstr = (char*) malloc(n);
         it = 0;
-        while ((buffer[i]) == 0) {
+        while (isspace(buffer[i]) == 0) {
             httpstr[it] = buffer[i];
             it++;
             i++;
