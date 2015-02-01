@@ -13,6 +13,7 @@
 #include <stdlib.h>
 #include <pthread.h>
 #include <iostream>
+#include <ctype.h>
 //using namespace std;
 #define NUM_THREADS     5
 #define MAX_BACKLOG     10
@@ -26,15 +27,60 @@ void error(const char *msg)
 
 void *handelRequest(void *sock_fd)
 {
-    long sock;
-    sock = (long)sock_fd;
-    
-    int n;
+//    long sock;
+    long sock = (long)sock_fd;
+
     char buffer[256];
     
     bzero(buffer,256);
     
-    n = read(sock,buffer,255);
+    int n = read(sock,buffer,255);
+    
+    std::cout << buffer << std::endl;
+    //scan the request for a GET
+    char *requestType = (char*) malloc(n);
+    int i = 0;
+    while (isalpha(buffer[i])) {
+        requestType[i] = buffer[i];
+        i++;
+    }
+    std::cout << "request type: " << requestType << std::endl;
+    if (strcmp(requestType, "GET") == 0) {
+        //GET request present
+        //skip space
+        while (isspace(buffer[i])) {
+            i++;
+        }
+        //get the url path
+        int start = i;
+        char* urlstr = (char*) malloc(n);
+        int it = 0;
+        while (isspace(buffer[start]) == 0) {
+            urlstr[it] = buffer[start];
+            it++;
+            start++;
+        }
+        i = start;
+        std::cout << "path: " << urlstr << std::endl;
+        while (isspace(buffer[i])) {
+            i++;
+        }
+        //get HTTP type
+        char* httpstr = (char*) malloc(n);
+        it = 0;
+        while (isspace(buffer[i]) == 0) {
+            httpstr[it] = buffer[i];
+            it++;
+            i++;
+        }
+        std::cout << "HTTP Version: " << httpstr << std::endl;
+        
+        
+    }
+    else
+    {
+        //no valid request: print out proper error
+    }
     
     if (n < 0) error("ERROR reading from socket");
     //printf("Here is the message: %s\n",buffer);
@@ -43,7 +89,7 @@ void *handelRequest(void *sock_fd)
     std::cout << "Handeling Request! Socket Descriptor: "  << sock <<    std::endl;
     
      n = write(sock,"Successful message: ",18);
-        n = n + write(sock,buffer,18);
+        n = n + write(sock,&buffer,18);
     if (n < 0) {error("ERROR writing to socket");}
     
     char* databuf[1024];
@@ -87,7 +133,7 @@ int main(int argc, const char * argv[]) {
         return -1;
     }
     
-    if(int listen_begin = listen(sock_fd, MAX_BACKLOG) < 0)
+    if(listen(sock_fd, MAX_BACKLOG) < 0)
     {
         std::cout << "Error while establishing listening socket" << std::endl;
         return -1;
