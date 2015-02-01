@@ -88,7 +88,7 @@ void *handelRequest(void *sock_fd)
 
     std::cout << "Handeling Request! Socket Descriptor: "  << sock <<    std::endl;
     
-     n = write(sock,"Successful message: ",18);
+     n = write(sock,"Successful message: ",19);
         n = n + write(sock,&buffer,18);
     if (n < 0) {error("ERROR writing to socket");}
     
