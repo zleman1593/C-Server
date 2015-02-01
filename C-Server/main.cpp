@@ -78,11 +78,28 @@ void *handelRequest(void *sock_fd)
         if (strcmp(httpstr, "HTTP/1.0") == 0 || strcmp(httpstr, "HTTP/1.1") == 0) {
             //HTTP request ok
             //try to get file path
-            FILE *fs = fopen(urlstr, "r");
+            FILE *fs = fopen("/Users/thegreenfrog/Desktop/Systems/C-Server/C-Server/hello.html", "r");
             if (fs == NULL) {
                 //could be 404, 403, 401
                 std::cout << "404: Not Found" << std::endl;
             }
+            std::string contents;
+            std::fseek(fs, 0, SEEK_END);
+            contents.resize(std::ftell(fs));
+            std::rewind(fs);
+            std::fread(&contents[0], 1, contents.size(), fs);
+            std::cout << contents << std::endl;
+//            fseek (fs , 0 , SEEK_END);
+//            long lSize = ftell (fs);
+//            rewind (fs);
+//            char teststring [lSize];
+//            std::cout << lSize << std::endl;
+//            while ( ! feof (fs) )
+//            {
+//                //if ( fgets(teststring , lSize, fs) == NULL ) break;
+//                
+//                fputs (teststring , stdout);
+//            }
             
             if(write(sock, urlstr, sizeof(urlstr)) < 0)
             {
