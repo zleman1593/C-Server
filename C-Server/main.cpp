@@ -61,7 +61,6 @@ void *handelRequest(void *sock_fd)
         }
         i = start;
         std::cout << "path: " << urlstr << std::endl;
-        //CHECK IF URL PATH IS VALID
         while (isspace(buffer[i])) {
             i++;
         }
@@ -75,7 +74,18 @@ void *handelRequest(void *sock_fd)
         }
         std::cout << "HTTP Version: " << httpstr << std::endl;
         //determine HTTP version
-        
+        if (strcmp(httpstr, "HTTP/1.0") == 0 || strcmp(httpstr, "HTTP/1.1") == 0) {
+            //HTTP request ok
+            //try to get file path
+            
+            //if no such file path, 404
+            //file path found, 200
+        }
+        else
+        {
+            //incorrect HTTP version call
+            std::cout << "400: Bad Request" << std::endl;
+        }
     }
     else
     {
