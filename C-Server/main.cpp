@@ -73,12 +73,14 @@ void *handelRequest(void *sock_fd)
             it++;
             i++;
         }
+    
         std::cout << "HTTP Version: " << httpstr << std::endl;
         //determine HTTP version
         if (strcmp(httpstr, "HTTP/1.0") == 0 || strcmp(httpstr, "HTTP/1.1") == 0) {
             //HTTP request ok
             //try to get file path
-            FILE *fs = fopen("/Users/thegreenfrog/Desktop/Systems/C-Server/C-Server/hello.html", "r");
+            /*FILE *fs = fopen("/Users/thegreenfrog/Desktop/Systems/C-Server/C-Server/hello.html", "r");*/
+                        FILE *fs = fopen("/Users/zackleman/Desktop/hello.html", "r");
             if (fs == NULL) {
                 //could be 404, 403, 401
                 std::cout << "404: Not Found" << std::endl;
@@ -89,13 +91,20 @@ void *handelRequest(void *sock_fd)
             std::rewind(fs);
             std::fread(&contents[0], 1, contents.size(), fs);
             std::cout << contents << std::endl;
+            char test[]  = "test";
             
-            write(sock, &contents, contents.size());
-//            fseek (fs , 0 , SEEK_END);
-//            long lSize = ftell (fs);
-//            rewind (fs);
-//            char teststring [lSize];
-//            std::cout << lSize << std::endl;
+         
+            fseek (fs , 0 , SEEK_END);
+            long lSize = ftell (fs);
+            rewind (fs);
+            char teststring [lSize];
+            std::cout << lSize << std::endl;
+            
+           // write(sock, test, contents.size());
+            char *s2;
+            s2 = (char *)alloca(contents.size() + 1);
+            memcpy(s2, contents.c_str(), contents.size() + 1);
+             write(sock, s2, lSize);
 //            while ( ! feof (fs) )
 //            {
 //                //if ( fgets(teststring , lSize, fs) == NULL ) break;
