@@ -90,8 +90,21 @@ void *handelRequest(void *sock_fd)
             FILE *fs = fopen("/Users/zackleman/Desktop/hello.html", "r");
             if (fs == NULL) {
                 //could be 404, 403, 401
+                
+                if (errno == EACCES){
+                     std::cout << "Permission denied" << std::endl;
+                     write(sock, "403: Permission denied", 16);
+                    //cerr << "Permission denied" << endl;
+                
+                } else{
+                    //cerr << "Something went wrong: " << strerror(errno) << endl;
                 std::cout << "404: Not Found" << std::endl;
+               write(sock, "404: Not Found", 16);
             }
+            }
+            
+            
+          
             std::string contents;
             std::fseek(fs, 0, SEEK_END);
             contents.resize(std::ftell(fs));
@@ -128,6 +141,7 @@ void *handelRequest(void *sock_fd)
         {
             //incorrect HTTP version call
             std::cout << "400: Bad Request" << std::endl;
+            write(sock, "400: Bad Request", 16);
         }
     }
     else
@@ -135,7 +149,13 @@ void *handelRequest(void *sock_fd)
         //no valid request (400)
         std::cout << "400: Bad Request" << std::endl;
         write(sock, "400: Bad Request", 16);
-        //need to support 200 (everything ok), 404 (not found), 403 (forbidden, but request correct), 401 (invalid credentials) and 400 (bad request) status codes
+        
+     // 404 (not found),
+        
+        
+        //403 (forbidden, but request correct),
+        //401 (invalid credentials)
+        //400 (bad request) status codes
     }
     
     if (n < 0) error("ERROR reading from socket");
