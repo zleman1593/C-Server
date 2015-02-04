@@ -30,8 +30,8 @@ void *handelRequest(void *sock_fd)
     long sock = (long)sock_fd;
 
     char buffer[256];
-    
-    while (true) {
+    bool is11 = true;
+    while (is11) {
         
     
     bzero(buffer,256);
@@ -80,6 +80,9 @@ void *handelRequest(void *sock_fd)
         std::cout << "HTTP Version: " << httpstr << std::endl;
         //determine HTTP version
         if (strcmp(httpstr, "HTTP/1.0") == 0 || strcmp(httpstr, "HTTP/1.1") == 0) {
+            if(strcmp(httpstr, "HTTP/1.0") == 0){
+                is11 = false;
+            }
             //HTTP request ok
             //try to get file path
             /*FILE *fs = fopen("/Users/thegreenfrog/Desktop/Systems/C-Server/C-Server/hello.html", "r");*/
@@ -94,8 +97,7 @@ void *handelRequest(void *sock_fd)
             contents.resize(std::ftell(fs));
             std::rewind(fs);
             std::fread(&contents[0], 1, contents.size(), fs);
-            std::cout << contents << std::endl;
-            char test[]  = "test";
+            //std::cout << contents << std::endl;
             
          
             fseek (fs , 0 , SEEK_END);
@@ -104,11 +106,10 @@ void *handelRequest(void *sock_fd)
             char teststring [lSize];
             std::cout << lSize << std::endl;
             
-           // write(sock, test, contents.size());
-            char *s2;
-            s2 = (char *)alloca(contents.size() + 1);
-            memcpy(s2, contents.c_str(), contents.size() + 1);
-             write(sock, s2, lSize);
+            char *temp;
+            temp = (char *)alloca(contents.size() + 1);
+            memcpy(temp, contents.c_str(), contents.size() + 1);
+            write(sock, temp, lSize);
 //            while ( ! feof (fs) )
 //            {
 //                //if ( fgets(teststring , lSize, fs) == NULL ) break;
@@ -133,6 +134,7 @@ void *handelRequest(void *sock_fd)
     {
         //no valid request (400)
         std::cout << "400: Bad Request" << std::endl;
+        write(sock, "400: Bad Request", 16);
         //need to support 200 (everything ok), 404 (not found), 403 (forbidden, but request correct), 401 (invalid credentials) and 400 (bad request) status codes
     }
     
@@ -142,17 +144,11 @@ void *handelRequest(void *sock_fd)
 
     std::cout << "Handeling Request! Socket Descriptor: "  << sock <<    std::endl;
     
-     //n = write(sock, contents, contents.size());
-        n = n + write(sock,&buffer,18);
+     
+       /* n = n + write(sock,&buffer,18);
     if (n < 0) {error("ERROR writing to socket");}
-    
+    */
     char* databuf[1024];
-    /* int getMsg = recv(sock_fd, databuf, sizeof(databuf), 0);
-     if (getMsg < 0)
-     {
-     std::cout << "Error while recieving HTTP request" << std::endl;
-     exit(-1); //or break?
-     }  */
         
     }
     pthread_exit(NULL);
