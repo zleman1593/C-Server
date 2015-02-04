@@ -31,6 +31,9 @@ void *handelRequest(void *sock_fd)
 
     char buffer[256];
     
+    while (true) {
+        
+    
     bzero(buffer,256);
     
     int n = read(sock,buffer,255);
@@ -80,7 +83,8 @@ void *handelRequest(void *sock_fd)
             //HTTP request ok
             //try to get file path
             /*FILE *fs = fopen("/Users/thegreenfrog/Desktop/Systems/C-Server/C-Server/hello.html", "r");*/
-                        FILE *fs = fopen("/Users/zackleman/Desktop/hello.html", "r");
+            
+            FILE *fs = fopen("/Users/zackleman/Desktop/hello.html", "r");
             if (fs == NULL) {
                 //could be 404, 403, 401
                 std::cout << "404: Not Found" << std::endl;
@@ -149,6 +153,8 @@ void *handelRequest(void *sock_fd)
      std::cout << "Error while recieving HTTP request" << std::endl;
      exit(-1); //or break?
      }  */
+        
+    }
     pthread_exit(NULL);
 }
 
@@ -223,8 +229,6 @@ int main(int argc, const char * argv[]) {
     return 0;
     
 }
-
-
 
 
 
