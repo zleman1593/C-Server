@@ -109,10 +109,10 @@ void *handelRequest(void *sock_fd)
             
           
             std::string contents;
-            std::fseek(fs, 0, SEEK_END);
-            contents.resize(std::ftell(fs));
-            std::rewind(fs);
-            std::fread(&contents[0], 1, contents.size(), fs);
+            fseek(fs, 0, SEEK_END);
+            contents.resize(ftell(fs));
+            rewind(fs);
+            fread(&contents[0], 1, contents.size(), fs);
             //std::cout << contents << std::endl;
             
          
