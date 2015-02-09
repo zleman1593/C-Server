@@ -14,6 +14,9 @@
 #include <pthread.h>
 #include <iostream>
 #include <ctype.h>
+#include <string.h>
+#include <errno.h>
+#include <cerrno>
 //using namespace std;
 #define NUM_THREADS     5
 #define MAX_BACKLOG     10
@@ -116,26 +119,13 @@ void *handelRequest(void *sock_fd)
             fseek (fs , 0 , SEEK_END);
             long lSize = ftell (fs);
             rewind (fs);
-            char teststring [lSize];
-            std::cout << lSize << std::endl;
+                      std::cout << lSize << std::endl;
             
             char *temp;
             temp = (char *)alloca(contents.size() + 1);
             memcpy(temp, contents.c_str(), contents.size() + 1);
             write(sock, temp, lSize);
-//            while ( ! feof (fs) )
-//            {
-//                //if ( fgets(teststring , lSize, fs) == NULL ) break;
-//                
-//                fputs (teststring , stdout);
-//            }
-            
-//            if(write(sock, urlstr, sizeof(urlstr)) < 0)
-//            {
-//                std::cout << "Error while writing back to socket" << std::endl;
-//            }
-            //if no such file path, 404
-            //file path found, 200
+          
         }
         else
         {
@@ -164,11 +154,7 @@ void *handelRequest(void *sock_fd)
 
     std::cout << "Handeling Request! Socket Descriptor: "  << sock <<    std::endl;
     
-     
-       /* n = n + write(sock,&buffer,18);
-    if (n < 0) {error("ERROR writing to socket");}
-    */
-    char* databuf[1024];
+    
         
     }
     pthread_exit(NULL);
@@ -232,10 +218,7 @@ int main(int argc, const char * argv[]) {
                 exit(-1);
             }
         }
-        
-        
-        
-        
+ 
     }
     
     //close();
