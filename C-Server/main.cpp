@@ -135,7 +135,13 @@ void *handelRequest(void *sock_fd)
             char *temp;
             temp = (char *)alloca(contents.size() + 1);
             memcpy(temp, contents.c_str(), contents.size() + 1);
+           
+            write(sock, "HTTP/1.0 200 Ok\r\n", 20);
+            write(sock, "Content-Type: application/pdf\r\n", 30);
+            //write(sock, "Content-Type: text/html\r\n", 30);
+            write(sock, "Content-Length: 625\r\n",30);
             write(sock, temp, lSize);
+            
           
         }
         else
