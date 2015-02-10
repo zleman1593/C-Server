@@ -20,6 +20,7 @@
 //using namespace std;
 #define NUM_THREADS     5
 #define MAX_BACKLOG     10
+int openConnections = 0;
 
 
 void error(const char *msg)
@@ -85,6 +86,7 @@ void *handelRequest(void *sock_fd)
         if (strcmp(httpstr, "HTTP/1.0") == 0 || strcmp(httpstr, "HTTP/1.1") == 0) {
             if(strcmp(httpstr, "HTTP/1.0") == 0){
                 is11 = false;
+                openConnections--;
             }
             //HTTP request ok
             //try to get file path
@@ -157,6 +159,7 @@ void *handelRequest(void *sock_fd)
     
         
     }
+     openConnections--;
     pthread_exit(NULL);
 }
 
@@ -216,6 +219,8 @@ int main(int argc, const char * argv[]) {
             if (rc){
                 std::cout << "Error:unable to create thread," << rc <<  std::endl;
                 exit(-1);
+            }else{
+                openConnections++;
             }
         }
  
