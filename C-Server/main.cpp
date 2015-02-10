@@ -60,12 +60,17 @@ void *handelRequest(void *sock_fd)
         //get the url path
         int start = i;
         char* urlstr = (char*) malloc(n);
+        char* filetype = (char*) malloc(n);
+        int ftype = 0;
+        int ftypeit = 0;
         int it = 0;
         while (isspace(buffer[start]) == 0) {
             urlstr[it] = buffer[start];
+
             it++;
             start++;
         }
+        std::cout << "file type: " << filetype << std::endl;
         i = start;
         std::cout << "path: " << urlstr << std::endl;
         //MAKE SURE WE CHECK URL PATH FITS PATH PATTERN
@@ -106,7 +111,7 @@ void *handelRequest(void *sock_fd)
                 std::cout << "404: Not Found" << std::endl;
                write(sock, "404: Not Found", 16);
             }
-            }
+        }
             
             
           
