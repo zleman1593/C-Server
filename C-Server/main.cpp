@@ -30,6 +30,8 @@ struct threadStruct{
     time_t startTime;
 };
 
+std::vector<threadStruct*> vectorThread;
+
 
 void error(const char *msg)
 {
@@ -82,6 +84,8 @@ void *handelRequest(void *sock_fd)
         {
             std::cout << "404: Not Found" << std::endl;
             write(sock, "404: Not Found", 16);
+            openConnections--;
+            pthread_exit(NULL);
         }
         i = start;
         std::cout << "path: " << urlstr << std::endl;
@@ -117,11 +121,15 @@ void *handelRequest(void *sock_fd)
                      std::cout << "Permission denied" << std::endl;
                      write(sock, "403: Permission denied", 16);
                     //cerr << "Permission denied" << endl;
+                    openConnections--;
+                    pthread_exit(NULL);
                 
                 } else{
-                    //cerr << "Something went wrong: " << strerror(errno) << endl;
+                //cerr << "Something went wrong: " << strerror(errno) << endl;
                 std::cout << "404: Not Found" << std::endl;
-               write(sock, "404: Not Found", 16);
+                write(sock, "404: Not Found", 16);
+                openConnections--;
+                pthread_exit(NULL);
             }
             }
             
@@ -157,6 +165,8 @@ void *handelRequest(void *sock_fd)
             //incorrect HTTP version call
             std::cout << "400: Bad Request" << std::endl;
             write(sock, "400: Bad Request", 16);
+            openConnections--;
+            pthread_exit(NULL);
         }
     }
     else
@@ -164,6 +174,8 @@ void *handelRequest(void *sock_fd)
         //no valid request (400)
         std::cout << "400: Bad Request" << std::endl;
         write(sock, "400: Bad Request", 16);
+        openConnections--;
+        pthread_exit(NULL);
         
      // 404 (not found),
         
@@ -178,7 +190,11 @@ void *handelRequest(void *sock_fd)
     
 
     std::cout << "Handeling Request! Socket Descriptor: "  << sock <<    std::endl;
-    
+    for (int j; j < vectorThread.size(); ++j) {
+        if (vectorThread.at(j)->pid == pthread_self()) {
+            vectorThread.at(j)->startTime = time(NULL);
+        }
+    }
     
         
     }
@@ -208,11 +224,14 @@ int main(int argc, const char * argv[]) {
     }
     
     struct sockaddr_in myaddr;
-    /*if (argv[i]){
-     myaddr.sin_port = htons(argv[i]);
-     }else{*/
-    myaddr.sin_port = htons(8888); // use port default of 8888
-    // }
+    if (argc < 2) {
+        //use default port of 8888
+        myaddr.sin_port = htons(8888);
+    }
+    else
+    {
+        myaddr.sin_port = atoi(argv[1]);
+    }
     myaddr.sin_family = AF_INET;
     myaddr.sin_addr.s_addr = htonl(INADDR_ANY);
     
@@ -230,7 +249,6 @@ int main(int argc, const char * argv[]) {
     
     int adressSize = sizeof(myaddr);
     int *size = &adressSize;
-    std::vector<threadStruct*> vectorThread;
     time_t timer;
     
     while(true)
