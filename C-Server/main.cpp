@@ -17,10 +17,18 @@
 #include <string.h>
 #include <errno.h>
 #include <cerrno>
+#include <vector>
+#include <time.h>
 //using namespace std;
 #define NUM_THREADS     5
 #define MAX_BACKLOG     10
+#define THREAD_TIMEOUT  60
 int openConnections = 0;
+
+struct threadStruct{
+    pthread_t pid;
+    time_t startTime;
+};
 
 
 void error(const char *msg)
@@ -99,9 +107,9 @@ void *handelRequest(void *sock_fd)
             }
             //HTTP request ok
             //try to get file path
-            /*FILE *fs = fopen("/Users/thegreenfrog/Desktop/Systems/C-Server/C-Server/hello.html", "r");*/
+            FILE *fs = fopen("/Users/thegreenfrog/Desktop/Systems/C-Server/C-Server/3C.pdf", "r");
             
-            FILE *fs = fopen("/Users/zackleman/Desktop/hello.html", "r");
+            //FILE *fs = fopen("/Users/zackleman/Desktop/hello.html", "r");
             if (fs == NULL) {
                 //could be 404, 403, 401
                 
@@ -178,6 +186,11 @@ void *handelRequest(void *sock_fd)
     pthread_exit(NULL);
 }
 
+//returns true if a thread was killed. false otherwise
+bool manageThreads()
+{
+    return false;
+}
 
 
 int main(int argc, const char * argv[]) {
@@ -217,6 +230,8 @@ int main(int argc, const char * argv[]) {
     
     int adressSize = sizeof(myaddr);
     int *size = &adressSize;
+    std::vector<threadStruct*> vectorThread;
+    time_t timer;
     
     while(true)
     {
@@ -227,15 +242,29 @@ int main(int argc, const char * argv[]) {
             std::cout << "Error while accepting" << std::endl;
             return -1;
         } else{
-            
             pthread_t newThread;
             std::cout << "Creating  new thread " <<    std::endl;
+            time(&timer);
             int rc = pthread_create(&newThread, NULL, handelRequest, (void *)newSocketfd);
             if (rc){
                 std::cout << "Error:unable to create thread," << rc <<  std::endl;
                 exit(-1);
             }else{
+                threadStruct *inputstruct = new threadStruct;
+                inputstruct->pid = newThread;
+                inputstruct->startTime = timer;
+                vectorThread.push_back(inputstruct);
+                
                 openConnections++;
+                //determine if a thread should be killed
+                for (int i = 0; i < vectorThread.size(); i++) {
+                    if (difftime(time(NULL), vectorThread.at(i)->startTime) > (THREAD_TIMEOUT/vectorThread.size()))
+                    {
+                        //kill thread
+                        pthread_cancel(vectorThread.at(i)->pid);
+                        vectorThread.erase(vectorThread.begin() + i);
+                    }
+                }
             }
         }
  
