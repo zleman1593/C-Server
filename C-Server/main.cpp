@@ -16,13 +16,14 @@
 #include <ctype.h>
 #include <string.h>
 #include <errno.h>
+#include <sstream>
 #include <cerrno>
 #include <vector>
 #include <time.h>
 //using namespace std;
 #define NUM_THREADS     5
 #define MAX_BACKLOG     10
-#define THREAD_TIMEOUT  60
+#define THREAD_TIMEOUT  100000
 int openConnections = 0;
 
 struct threadStruct{
@@ -116,13 +117,15 @@ void *handelRequest(void *sock_fd)
             }
             //HTTP request ok
             //try to get file path
-            char *rootPath;
-            strcpy(rootPath, "/Users/thegreenfrog/Desktop/Systems/C-Server/C-Server");
-            strcat(rootPath, urlstr);
-            std::cout << rootPath << std::endl;
-            FILE *fs = fopen(rootPath, "r");
+//            char *rootPath;
+//            strcpy(rootPath, "/Users/thegreenfrog/Desktop/Systems/C-Server/C-Server");
+//            strcat(rootPath, urlstr);
+//            std::cout << rootPath << std::endl;
+//            FILE *fs = fopen(rootPath, "r");
+
+            FILE *fs = fopen("/Users/thegreenfrog/Desktop/Systems/C-Server/C-Server/home.html", "r");
             
-            //FILE *fs = fopen("/Users/zackleman/Desktop/hello.html", "r");
+            //FILE *fs = fopen("/Users/zackleman/Desktop/Zackery_Leman_Resume.pdf", "r");
             if (fs == NULL) {
                 //could be 404, 403, 401
                 
@@ -161,10 +164,18 @@ void *handelRequest(void *sock_fd)
             temp = (char *)alloca(contents.size() + 1);
             memcpy(temp, contents.c_str(), contents.size() + 1);
            
-            write(sock, "HTTP/1.0 200 Ok\r\n", 20);
-            write(sock, "Content-Type: application/pdf\r\n", 30);
+            write(sock, "HTTP/1.1 200 Ok\r\n", 19);
+            write(sock, "Content-Type: application/pdf\r\n", 33);
             //write(sock, "Content-Type: text/html\r\n", 30);
-            write(sock, "Content-Length: 625\r\n",30);
+    
+            std::ostringstream oss;
+            oss << "Content-Length: " << lSize << "\r\n";
+            std::string var = oss.str();
+            char *temp2;
+            temp2 = (char *)alloca(var.size() + 1);
+            memcpy(temp2, var.c_str(), var.size() + 1);
+            
+            write(sock, temp2,50);
             write(sock, temp, lSize);
             
           
