@@ -50,8 +50,13 @@ void *handelRequest(void *sock_fd)
     
     bzero(buffer,256);
     
-    int n = read(sock,buffer,255);
+    int n = read(sock,buffer,256);
     
+//        for (int i = 0; i < 256; i++) {
+//            if (strcmp()) {
+//                <#statements#>
+//            }
+//        }
     std::cout << buffer << std::endl;
     //scan the request for a GET
     char *requestType = (char*) malloc(n);
@@ -111,7 +116,11 @@ void *handelRequest(void *sock_fd)
             }
             //HTTP request ok
             //try to get file path
-            FILE *fs = fopen("/Users/thegreenfrog/Desktop/Systems/C-Server/C-Server/3C.pdf", "r");
+            char *rootPath;
+            strcpy(rootPath, "/Users/thegreenfrog/Desktop/Systems/C-Server/C-Server");
+            strcat(rootPath, urlstr);
+            std::cout << rootPath << std::endl;
+            FILE *fs = fopen(rootPath, "r");
             
             //FILE *fs = fopen("/Users/zackleman/Desktop/hello.html", "r");
             if (fs == NULL) {
@@ -230,8 +239,9 @@ int main(int argc, const char * argv[]) {
     }
     else
     {
-        myaddr.sin_port = atoi(argv[1]);
+        myaddr.sin_port = htons(atoi(argv[1]));
     }
+    std::cout << myaddr.sin_port << std::endl;
     myaddr.sin_family = AF_INET;
     myaddr.sin_addr.s_addr = htonl(INADDR_ANY);
     
