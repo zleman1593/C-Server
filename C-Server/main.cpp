@@ -20,6 +20,7 @@
 #include <cerrno>
 #include <vector>
 #include <time.h>
+#define DEFAULT_PORT 8888
 #define NUM_THREADS     5
 #define MAX_BACKLOG     10
 #define THREAD_TIMEOUT  60
@@ -59,7 +60,7 @@ void *handelRequest(void *sock_fd)
         if(num >0)
         {//data present to read
             n = read(sock,buffer,2000);
-            std::cout << buffer<<std::endl;
+            //std::cout << buffer<<std::endl;
         }
         else
         {//thread has reached timeout. Kill
@@ -158,8 +159,13 @@ void *handelRequest(void *sock_fd)
                 temp = (char *)alloca(contents.size() + 1);
                 memcpy(temp, contents.c_str(), contents.size() + 1);
                 
-                //Send HTTP status
-                write(sock, "HTTP/1.1 200 Ok\r\n", 18);
+                
+             //   if (!strcmp(httpstr, "HTTP/1.1")) {
+                    //Send HTTP status to 1.1 client
+                    write(sock, "HTTP/1.1 200 Ok\r\n", 18);
+                //}
+                
+                
                 if (!strcmp(filetype, ".html")) {
                     write(sock, "content-type: text/html\r\n", 26);
                 }
@@ -182,7 +188,6 @@ void *handelRequest(void *sock_fd)
                 time(&currentTime);
                 struct tm * timeinfo = localtime(&currentTime);
                 strftime (buffer,80,"Date: %c \r\n",timeinfo);
-                puts(buffer);
                 write(sock, buffer, 35);
                 
                 //Send Content Length
@@ -199,7 +204,7 @@ void *handelRequest(void *sock_fd)
                 while ( x /= 10 )
                     length++;
                 
-                std::cout <<(length)<<std::endl;
+               
                 write(sock, temp2,(20+length));
                 
                 //Send Body
@@ -271,7 +276,7 @@ int main(int argc, const char * argv[]) {
     /*if (argv[i]){
      myaddr.sin_port = htons(argv[i]);
      }else{*/
-    myaddr.sin_port = htons(8888); // use port default of 8888
+    myaddr.sin_port = htons(DEFAULT_PORT); // use port default of 8888
     // }
     myaddr.sin_family = AF_INET;
     myaddr.sin_addr.s_addr = htonl(INADDR_ANY);
