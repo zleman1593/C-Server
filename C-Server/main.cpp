@@ -20,7 +20,6 @@
 #include <cerrno>
 #include <vector>
 #include <time.h>
-//using namespace std;
 #define NUM_THREADS     5
 #define MAX_BACKLOG     10
 #define THREAD_TIMEOUT  60
@@ -122,6 +121,7 @@ void *handelRequest(void *sock_fd)
                 //FILE *fs = fopen("/Users/thegreenfrog/Desktop/Systems/C-Server/C-Server/3C.pdf", "r");
                 
                 FILE *fs = fopen("/Users/zackleman/Desktop/test.png", "r");
+               //  FILE *fs = fopen("/Users/zackleman/Desktop/index.html", "r");
                 if (fs == NULL) {
                     //could be 404, 403, 401
                     
@@ -156,19 +156,32 @@ void *handelRequest(void *sock_fd)
                 temp = (char *)alloca(contents.size() + 1);
                 memcpy(temp, contents.c_str(), contents.size() + 1);
                 
-                write(sock, "HTTP/1.1 200 Ok\r\n", 19);
+                //Send HTTP status
+                write(sock, "HTTP/1.1 200 Ok\r\n", 18);
+                //Send content type
                 //write(sock, "Content-Type: application/pdf\r\n", 33);
-                write(sock, "Content-Type: image/png\r\n", 28);
-                //write(sock, "Content-Type: text/html\r\n", 30);
+               // write(sock, "content-type: image/png\r\n", 26);
+                write(sock, "Content-Type: text/html\r\n", 26);
                 
+                //Send Date
+                char buffer [80];
+                time_t currentTime;
+                time(&currentTime);
+                struct tm * timeinfo = localtime(&currentTime);
+                strftime (buffer,80,"Date: %c \r\n",timeinfo);
+                puts(buffer);
+                write(sock, buffer, 35);
+                
+                //Send Content Length
                 std::ostringstream oss;
-                oss << "Content-Length: " << lSize << "\r\n";
+                oss << "content-length: " << lSize << "\r\n\r\n";
                 std::string var = oss.str();
                 char *temp2;
                 temp2 = (char *)alloca(var.size() + 1);
                 memcpy(temp2, var.c_str(), var.size() + 1);
+                write(sock, temp2,19); // 26 for png? 19 for html
                 
-                write(sock, temp2,50);
+                //Send Body
                 write(sock, temp, lSize);
                 
                 
