@@ -24,6 +24,7 @@
 #define MAX_BACKLOG     10
 #define THREAD_TIMEOUT  60
 int openConnections = 0;
+timeval threadTimeout;
 
 struct threadStruct{
     pthread_t pid;
@@ -46,22 +47,24 @@ void *handelRequest(void *sock_fd)
     char buffer[256];
     bool is11 = true;
     while (is11) {
-        
+        int n;
+        threadTimeout.tv_sec = 60;
+        threadTimeout.tv_usec = 0;
         
         bzero(buffer,256);
+        fd_set readset;
+        FD_ZERO(&readset);
+        FD_SET(sock, &readset);
+        int num = select(sock+1, &readset, NULL, NULL, &threadTimeout);
+        if(num >0)
+        {//data present to read
+            n = read(sock,buffer,255);
+        }
+        else
+        {//thread has reached timeout. Kill
+            pthread_exit(NULL);
+        }
         
-        int n = read(sock,buffer,255);
-        
-        //        std::string str = buffer;
-        //        std::cout << "old buff" << str << std::endl;
-        //        //str.erase(str.begin()+str.find("\r"), str.end());
-        //        std::string carReturn = "HTTP";
-        //        std::string::size_type loc = str.find(carReturn);
-        //        if (loc != std::string::npos) {
-        //            str.erase(loc, carReturn.length());
-        //        }
-        //         std::cout << "new buff" << str << std::endl;
-        //scan the request for a GET
         char *requestType = (char*) malloc(n);
         int i = 0;
         
@@ -93,6 +96,7 @@ void *handelRequest(void *sock_fd)
             {
                 //interpret / as index.html
                 filetype = ".html";
+                urlstr = "/index.html";
             }
             i = start;
             std::cout << "path: " << urlstr << std::endl;
@@ -120,7 +124,9 @@ void *handelRequest(void *sock_fd)
                 //try to get file path
                 //FILE *fs = fopen("/Users/thegreenfrog/Desktop/Systems/C-Server/C-Server/3C.pdf", "r");
                 
-                FILE *fs = fopen("/Users/zackleman/Desktop/test.png", "r");
+                char root[]  = "/Users/zackleman/Desktop";
+                FILE *fs = fopen(strcat(root,urlstr), "r");
+                //FILE *fs = fopen("/Users/zackleman/Desktop/test.png", "r");
                //  FILE *fs = fopen("/Users/zackleman/Desktop/index.html", "r");
                 if (fs == NULL) {
                     //could be 404, 403, 401
@@ -158,10 +164,17 @@ void *handelRequest(void *sock_fd)
                 
                 //Send HTTP status
                 write(sock, "HTTP/1.1 200 Ok\r\n", 18);
-                //Send content type
-                //write(sock, "Content-Type: application/pdf\r\n", 33);
-               // write(sock, "content-type: image/png\r\n", 26);
-                write(sock, "Content-Type: text/html\r\n", 26);
+                if (!strcmp(filetype, ".html")) {
+                     write(sock, "content-type: text/html\r\n", 30);
+                }
+                else if (!strcmp(filetype, ".pdf"))
+                {
+                     write(sock, "content-type: application/png\r\n", 26);
+                }
+                else if (!strcmp(filetype, ".png")) {
+                    write(sock, "content-type: image/png\r\n", 26);
+                }
+                
                 
                 //Send Date
                 char buffer [80];
@@ -179,7 +192,15 @@ void *handelRequest(void *sock_fd)
                 char *temp2;
                 temp2 = (char *)alloca(var.size() + 1);
                 memcpy(temp2, var.c_str(), var.size() + 1);
-                write(sock, temp2,19); // 26 for png? 19 for html
+       
+                
+                int length = 1;
+                int x = (int) lSize;
+                while ( x /= 10 )
+                    length++;
+                
+                std::cout <<(length)<<std::endl;
+                write(sock, temp2,(20+length)); // 26 for png? 19 for html
                 
                 //Send Body
                 write(sock, temp, lSize);
@@ -289,22 +310,10 @@ int main(int argc, const char * argv[]) {
                 std::cout << "Error:unable to create thread," << rc <<  std::endl;
                 exit(-1);
             }else{
-                threadStruct *inputstruct = new threadStruct;
-                inputstruct->pid = newThread;
-                inputstruct->startTime = timer;
-                vectorThread.push_back(inputstruct);
+              
                 
                 openConnections++;
-                //determine if a thread should be killed
-                for (int i = 0; i < vectorThread.size(); i++) {
-                    if (difftime(time(NULL), vectorThread.at(i)->startTime) > (THREAD_TIMEOUT/vectorThread.size()))
-                    {
-                        //kill thread
-                        pthread_cancel(vectorThread.at(i)->pid);
-                        vectorThread.erase(vectorThread.begin() + i);
-                    }
-                }
-            }
+                           }
         }
         
     }
