@@ -44,21 +44,22 @@ void *handelRequest(void *sock_fd)
 {
     long sock = (long)sock_fd;
     
-    char buffer[256];
+    char buffer[2000];
     bool is11 = true;
     while (is11) {
         int n;
         threadTimeout.tv_sec = 60;
         threadTimeout.tv_usec = 0;
         
-        bzero(buffer,256);
+        bzero(buffer,2000);
         fd_set readset;
         FD_ZERO(&readset);
         FD_SET(sock, &readset);
         int num = select(sock+1, &readset, NULL, NULL, &threadTimeout);
         if(num >0)
         {//data present to read
-            n = read(sock,buffer,255);
+            n = read(sock,buffer,2000);
+            std::cout << buffer<<std::endl;
         }
         else
         {//thread has reached timeout. Kill
@@ -143,7 +144,7 @@ void *handelRequest(void *sock_fd)
                     }
                 }
                 //clear buffer
-                memset(buffer, 0, 255);
+                memset(buffer, 0, 2000);
                 
                 std::string contents;
                 fseek(fs, 0, SEEK_END);
@@ -169,7 +170,7 @@ void *handelRequest(void *sock_fd)
                 }
                 else if (!strcmp(filetype, ".pdf"))
                 {
-                     write(sock, "content-type: application/png\r\n", 26);
+                     write(sock, "content-type: application/pdf\r\n", 32);
                 }
                 else if (!strcmp(filetype, ".png")) {
                     write(sock, "content-type: image/png\r\n", 26);
