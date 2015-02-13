@@ -161,7 +161,7 @@ void *handelRequest(void *sock_fd)
                 //Send HTTP status
                 write(sock, "HTTP/1.1 200 Ok\r\n", 18);
                 if (!strcmp(filetype, ".html")) {
-                    write(sock, "content-type: text/html\r\n", 30);
+                    write(sock, "content-type: text/html\r\n", 26);
                 }
                 else if (!strcmp(filetype, ".pdf"))
                 {
@@ -200,7 +200,7 @@ void *handelRequest(void *sock_fd)
                     length++;
                 
                 std::cout <<(length)<<std::endl;
-                write(sock, temp2,(20+length)); 
+                write(sock, temp2,(20+length));
                 
                 //Send Body
                 write(sock, temp, lSize);
