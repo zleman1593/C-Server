@@ -13,6 +13,7 @@
 #include <stdlib.h>
 #include <pthread.h>
 #include <iostream>
+#include <sstream>
 #include <ctype.h>
 #include <string.h>
 #include <errno.h>
@@ -91,8 +92,8 @@ void *handelRequest(void *sock_fd)
             }
             else
             {
-                std::cout << "404: Not Found" << std::endl;
-                write(sock, "404: Not Found", 16);
+                //interpret / as index.html
+                filetype = ".html";
             }
             i = start;
             std::cout << "path: " << urlstr << std::endl;
@@ -118,9 +119,9 @@ void *handelRequest(void *sock_fd)
                 }
                 //HTTP request ok
                 //try to get file path
-                FILE *fs = fopen("/Users/thegreenfrog/Desktop/Systems/C-Server/C-Server/3C.pdf", "r");
+                //FILE *fs = fopen("/Users/thegreenfrog/Desktop/Systems/C-Server/C-Server/3C.pdf", "r");
                 
-                //FILE *fs = fopen("/Users/zackleman/Desktop/hello.html", "r");
+                FILE *fs = fopen("/Users/zackleman/Desktop/test.png", "r");
                 if (fs == NULL) {
                     //could be 404, 403, 401
                     
@@ -155,10 +156,19 @@ void *handelRequest(void *sock_fd)
                 temp = (char *)alloca(contents.size() + 1);
                 memcpy(temp, contents.c_str(), contents.size() + 1);
                 
-                write(sock, "HTTP/1.0 200 Ok\r\n", 20);
-                write(sock, "Content-Type: application/pdf\r\n", 30);
+                write(sock, "HTTP/1.1 200 Ok\r\n", 19);
+                //write(sock, "Content-Type: application/pdf\r\n", 33);
+                write(sock, "Content-Type: image/png\r\n", 28);
                 //write(sock, "Content-Type: text/html\r\n", 30);
-                write(sock, "Content-Length: 625\r\n",30);
+                
+                std::ostringstream oss;
+                oss << "Content-Length: " << lSize << "\r\n";
+                std::string var = oss.str();
+                char *temp2;
+                temp2 = (char *)alloca(var.size() + 1);
+                memcpy(temp2, var.c_str(), var.size() + 1);
+                
+                write(sock, temp2,50);
                 write(sock, temp, lSize);
                 
                 
@@ -189,6 +199,7 @@ void *handelRequest(void *sock_fd)
         
         
         std::cout << "Handeling Request! Socket Descriptor: "  << sock <<    std::endl;
+        
         for (int j; j < vectorThread.size(); ++j) {
             if (vectorThread.at(j)->pid == pthread_self()) {
                 vectorThread.at(j)->startTime = time(NULL);

@@ -23,7 +23,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		8C01C5E61A7EC2DB00071055 /* hello.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = hello.html; sourceTree = "<group>"; };
+		8C01C5E61A7EC2DB00071055 /* index.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = index.html; sourceTree = "<group>"; };
 		8C8A2A801A8CF751006C2E72 /* cloud.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = cloud.jpg; path = ../../../cloud.jpg; sourceTree = "<group>"; };
 		8CFC95011A898A66003C3768 /* 3C.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = 3C.pdf; path = ../../../3C.pdf; sourceTree = "<group>"; };
 		A20C75801A799D1F00D3F82A /* MakeFile.make */ = {isa = PBXFileReference; lastKnownFileType = text; path = MakeFile.make; sourceTree = "<group>"; };
@@ -65,7 +65,7 @@
 				8CFC95011A898A66003C3768 /* 3C.pdf */,
 				A20C75801A799D1F00D3F82A /* MakeFile.make */,
 				A23CB71E1A798C12009C5469 /* main.cpp */,
-				8C01C5E61A7EC2DB00071055 /* hello.html */,
+				8C01C5E61A7EC2DB00071055 /* index.html */,
 			);
 			path = "C-Server";
 			sourceTree = "<group>";
