@@ -16,14 +16,13 @@
 #include <ctype.h>
 #include <string.h>
 #include <errno.h>
-#include <sstream>
 #include <cerrno>
 #include <vector>
 #include <time.h>
 //using namespace std;
 #define NUM_THREADS     5
 #define MAX_BACKLOG     10
-#define THREAD_TIMEOUT  100000
+#define THREAD_TIMEOUT  60
 int openConnections = 0;
 
 struct threadStruct{
@@ -43,182 +42,162 @@ void error(const char *msg)
 void *handelRequest(void *sock_fd)
 {
     long sock = (long)sock_fd;
-
+    
     char buffer[256];
     bool is11 = true;
     while (is11) {
         
-    
-    bzero(buffer,256);
-    
-    int n = read(sock,buffer,256);
-    
-//        for (int i = 0; i < 256; i++) {
-//            if (strcmp()) {
-//                <#statements#>
-//            }
-//        }
-    std::cout << buffer << std::endl;
-    //scan the request for a GET
-    char *requestType = (char*) malloc(n);
-    int i = 0;
-    while (isalpha(buffer[i])) {
-        requestType[i] = buffer[i];
-        i++;
-    }
-    std::cout << "request type: " << requestType << std::endl;
-    if (strcmp(requestType, "GET") == 0) {
-        //GET request present
-        //skip space
-        while (isspace(buffer[i])) {
+        
+        bzero(buffer,256);
+        
+        int n = read(sock,buffer,255);
+        
+        //        std::string str = buffer;
+        //        std::cout << "old buff" << str << std::endl;
+        //        //str.erase(str.begin()+str.find("\r"), str.end());
+        //        std::string carReturn = "HTTP";
+        //        std::string::size_type loc = str.find(carReturn);
+        //        if (loc != std::string::npos) {
+        //            str.erase(loc, carReturn.length());
+        //        }
+        //         std::cout << "new buff" << str << std::endl;
+        //scan the request for a GET
+        char *requestType = (char*) malloc(n);
+        int i = 0;
+        
+        while (isalpha(buffer[i])) {
+            requestType[i] = buffer[i];
             i++;
         }
-        //get the url path
-        int start = i;
-        char* urlstr = (char*) malloc(n);
-        int it = 0;
-        while (isspace(buffer[start]) == 0) {
-            urlstr[it] = buffer[start];
-            it++;
-            start++;
-        }
-        //variable holding file type
-        char* filetype = urlstr;
-        if ((filetype = std::strchr(filetype, '.')) != NULL) {
-        }
-        else
-        {
-            std::cout << "404: Not Found" << std::endl;
-            write(sock, "404: Not Found", 16);
-            openConnections--;
-            pthread_exit(NULL);
-        }
-        i = start;
-        std::cout << "path: " << urlstr << std::endl;
-        //MAKE SURE WE CHECK URL PATH FITS PATH PATTERN
-        while (isspace(buffer[i])) {
-            i++;
-        }
-        //get HTTP type
-        char* httpstr = (char*) malloc(n);
-        it = 0;
-        while (isspace(buffer[i]) == 0) {
-            httpstr[it] = buffer[i];
-            it++;
-            i++;
-        }
-    
-        std::cout << "HTTP Version: " << httpstr << std::endl;
-        //determine HTTP version
-        if (strcmp(httpstr, "HTTP/1.0") == 0 || strcmp(httpstr, "HTTP/1.1") == 0) {
-            if(strcmp(httpstr, "HTTP/1.0") == 0){
-                is11 = false;
-                openConnections--;
+        std::cout << "request type: " << requestType << std::endl;
+        if (strcmp(requestType, "GET") == 0) {
+            //GET request present
+            //skip space
+            while (isspace(buffer[i])) {
+                i++;
             }
-            //HTTP request ok
-            //try to get file path
-//            char *rootPath;
-//            strcpy(rootPath, "/Users/thegreenfrog/Desktop/Systems/C-Server/C-Server");
-//            strcat(rootPath, urlstr);
-//            std::cout << rootPath << std::endl;
-//            FILE *fs = fopen(rootPath, "r");
-
-            FILE *fs = fopen("/Users/thegreenfrog/Desktop/Systems/C-Server/C-Server/home.html", "r");
-            
-            //FILE *fs = fopen("/Users/zackleman/Desktop/Zackery_Leman_Resume.pdf", "r");
-            if (fs == NULL) {
-                //could be 404, 403, 401
-                
-                if (errno == EACCES){
-                     std::cout << "Permission denied" << std::endl;
-                     write(sock, "403: Permission denied", 16);
-                    //cerr << "Permission denied" << endl;
-                    openConnections--;
-                    pthread_exit(NULL);
-                
-                } else{
-                //cerr << "Something went wrong: " << strerror(errno) << endl;
+            //get the url path
+            int start = i;
+            char* urlstr = (char*) malloc(n);
+            int it = 0;
+            while (isspace(buffer[start]) == 0) {
+                urlstr[it] = buffer[start];
+                it++;
+                start++;
+            }
+            //variable holding file type
+            char* filetype = urlstr;
+            if ((filetype = std::strchr(filetype, '.')) != NULL) {
+            }
+            else
+            {
                 std::cout << "404: Not Found" << std::endl;
                 write(sock, "404: Not Found", 16);
-                openConnections--;
-                pthread_exit(NULL);
             }
+            i = start;
+            std::cout << "path: " << urlstr << std::endl;
+            //MAKE SURE WE CHECK URL PATH FITS PATH PATTERN
+            while (isspace(buffer[i])) {
+                i++;
+            }
+            //get HTTP type
+            char* httpstr = (char*) malloc(n);
+            it = 0;
+            while (isspace(buffer[i]) == 0) {
+                httpstr[it] = buffer[i];
+                it++;
+                i++;
             }
             
-            
-          
-            std::string contents;
-            fseek(fs, 0, SEEK_END);
-            contents.resize(ftell(fs));
-            rewind(fs);
-            fread(&contents[0], 1, contents.size(), fs);
-            //std::cout << contents << std::endl;
-            
-         
-            fseek (fs , 0 , SEEK_END);
-            long lSize = ftell (fs);
-            rewind (fs);
-                      std::cout << lSize << std::endl;
-            
-            char *temp;
-            temp = (char *)alloca(contents.size() + 1);
-            memcpy(temp, contents.c_str(), contents.size() + 1);
-           
-            write(sock, "HTTP/1.1 200 Ok\r\n", 19);
-            write(sock, "Content-Type: application/pdf\r\n", 33);
-            //write(sock, "Content-Type: text/html\r\n", 30);
-    
-            std::ostringstream oss;
-            oss << "Content-Length: " << lSize << "\r\n";
-            std::string var = oss.str();
-            char *temp2;
-            temp2 = (char *)alloca(var.size() + 1);
-            memcpy(temp2, var.c_str(), var.size() + 1);
-            
-            write(sock, temp2,50);
-            write(sock, temp, lSize);
-            
-          
+            std::cout << "HTTP Version: " << httpstr << std::endl;
+            //determine HTTP version
+            if (strcmp(httpstr, "HTTP/1.0") == 0 || strcmp(httpstr, "HTTP/1.1") == 0) {
+                if(strcmp(httpstr, "HTTP/1.0") == 0){
+                    is11 = false;
+                    openConnections--;
+                }
+                //HTTP request ok
+                //try to get file path
+                FILE *fs = fopen("/Users/thegreenfrog/Desktop/Systems/C-Server/C-Server/3C.pdf", "r");
+                
+                //FILE *fs = fopen("/Users/zackleman/Desktop/hello.html", "r");
+                if (fs == NULL) {
+                    //could be 404, 403, 401
+                    
+                    if (errno == EACCES){
+                        std::cout << "Permission denied" << std::endl;
+                        write(sock, "403: Permission denied", 16);
+                        //cerr << "Permission denied" << endl;
+                        
+                    } else{
+                        //cerr << "Something went wrong: " << strerror(errno) << endl;
+                        std::cout << "404: Not Found" << std::endl;
+                        write(sock, "404: Not Found", 16);
+                    }
+                }
+                //clear buffer
+                memset(buffer, 0, 255);
+                
+                std::string contents;
+                fseek(fs, 0, SEEK_END);
+                contents.resize(ftell(fs));
+                rewind(fs);
+                fread(&contents[0], 1, contents.size(), fs);
+                //std::cout << contents << std::endl;
+                
+                
+                fseek (fs , 0 , SEEK_END);
+                long lSize = ftell (fs);
+                rewind (fs);
+                std::cout << lSize << std::endl;
+                
+                char *temp;
+                temp = (char *)alloca(contents.size() + 1);
+                memcpy(temp, contents.c_str(), contents.size() + 1);
+                
+                write(sock, "HTTP/1.0 200 Ok\r\n", 20);
+                write(sock, "Content-Type: application/pdf\r\n", 30);
+                //write(sock, "Content-Type: text/html\r\n", 30);
+                write(sock, "Content-Length: 625\r\n",30);
+                write(sock, temp, lSize);
+                
+                
+            }
+            else
+            {
+                //incorrect HTTP version call
+                std::cout << "400: Bad Request" << std::endl;
+                write(sock, "400: Bad Request", 16);
+            }
         }
         else
         {
-            //incorrect HTTP version call
+            //no valid request (400)
             std::cout << "400: Bad Request" << std::endl;
             write(sock, "400: Bad Request", 16);
-            openConnections--;
-            pthread_exit(NULL);
+            
+            // 404 (not found),
+            
+            
+            //403 (forbidden, but request correct),
+            //401 (invalid credentials)
+            //400 (bad request) status codes
         }
-    }
-    else
-    {
-        //no valid request (400)
-        std::cout << "400: Bad Request" << std::endl;
-        write(sock, "400: Bad Request", 16);
-        openConnections--;
-        pthread_exit(NULL);
         
-     // 404 (not found),
+        if (n < 0) error("ERROR reading from socket");
+        //printf("Here is the message: %s\n",buffer);
         
         
-        //403 (forbidden, but request correct),
-        //401 (invalid credentials)
-        //400 (bad request) status codes
-    }
-    
-    if (n < 0) error("ERROR reading from socket");
-    //printf("Here is the message: %s\n",buffer);
-    
-
-    std::cout << "Handeling Request! Socket Descriptor: "  << sock <<    std::endl;
-    for (int j; j < vectorThread.size(); ++j) {
-        if (vectorThread.at(j)->pid == pthread_self()) {
-            vectorThread.at(j)->startTime = time(NULL);
+        std::cout << "Handeling Request! Socket Descriptor: "  << sock <<    std::endl;
+        for (int j; j < vectorThread.size(); ++j) {
+            if (vectorThread.at(j)->pid == pthread_self()) {
+                vectorThread.at(j)->startTime = time(NULL);
+            }
         }
-    }
-    
+        
         
     }
-     openConnections--;
+    openConnections--;
     pthread_exit(NULL);
 }
 
@@ -244,15 +223,11 @@ int main(int argc, const char * argv[]) {
     }
     
     struct sockaddr_in myaddr;
-    if (argc < 2) {
-        //use default port of 8888
-        myaddr.sin_port = htons(8888);
-    }
-    else
-    {
-        myaddr.sin_port = htons(atoi(argv[1]));
-    }
-    std::cout << myaddr.sin_port << std::endl;
+    /*if (argv[i]){
+     myaddr.sin_port = htons(argv[i]);
+     }else{*/
+    myaddr.sin_port = htons(8888); // use port default of 8888
+    // }
     myaddr.sin_family = AF_INET;
     myaddr.sin_addr.s_addr = htonl(INADDR_ANY);
     
@@ -270,6 +245,7 @@ int main(int argc, const char * argv[]) {
     
     int adressSize = sizeof(myaddr);
     int *size = &adressSize;
+    std::vector<threadStruct*> vectorThread;
     time_t timer;
     
     while(true)
@@ -306,7 +282,7 @@ int main(int argc, const char * argv[]) {
                 }
             }
         }
- 
+        
     }
     
     //close();
