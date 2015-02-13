@@ -127,18 +127,14 @@ void *handelRequest(void *sock_fd)
                 
                 char root[]  = "/Users/zackleman/Desktop";
                 FILE *fs = fopen(strcat(root,urlstr), "r");
-                //FILE *fs = fopen("/Users/zackleman/Desktop/test.png", "r");
-               //  FILE *fs = fopen("/Users/zackleman/Desktop/index.html", "r");
                 if (fs == NULL) {
                     //could be 404, 403, 401
                     
                     if (errno == EACCES){
                         std::cout << "Permission denied" << std::endl;
                         write(sock, "403: Permission denied", 16);
-                        //cerr << "Permission denied" << endl;
                         
                     } else{
-                        //cerr << "Something went wrong: " << strerror(errno) << endl;
                         std::cout << "404: Not Found" << std::endl;
                         write(sock, "404: Not Found", 16);
                     }
@@ -151,7 +147,6 @@ void *handelRequest(void *sock_fd)
                 contents.resize(ftell(fs));
                 rewind(fs);
                 fread(&contents[0], 1, contents.size(), fs);
-                //std::cout << contents << std::endl;
                 
                 
                 fseek (fs , 0 , SEEK_END);
@@ -166,14 +161,18 @@ void *handelRequest(void *sock_fd)
                 //Send HTTP status
                 write(sock, "HTTP/1.1 200 Ok\r\n", 18);
                 if (!strcmp(filetype, ".html")) {
-                     write(sock, "content-type: text/html\r\n", 30);
+                    write(sock, "content-type: text/html\r\n", 30);
                 }
                 else if (!strcmp(filetype, ".pdf"))
                 {
-                     write(sock, "content-type: application/pdf\r\n", 32);
+                    write(sock, "content-type: application/pdf\r\n", 32);
                 }
                 else if (!strcmp(filetype, ".png")) {
                     write(sock, "content-type: image/png\r\n", 26);
+                }  else if (!strcmp(filetype, ".jpg") || !strcmp(filetype, ".jpeg")) {
+                    write(sock, "content-type: image/jpeg\r\n", 27);
+                }   else if (!strcmp(filetype, ".gif")) {
+                    write(sock, "content-type: image/gif\r\n", 26);
                 }
                 
                 
@@ -193,7 +192,7 @@ void *handelRequest(void *sock_fd)
                 char *temp2;
                 temp2 = (char *)alloca(var.size() + 1);
                 memcpy(temp2, var.c_str(), var.size() + 1);
-       
+                
                 
                 int length = 1;
                 int x = (int) lSize;
@@ -201,7 +200,7 @@ void *handelRequest(void *sock_fd)
                     length++;
                 
                 std::cout <<(length)<<std::endl;
-                write(sock, temp2,(20+length)); // 26 for png? 19 for html
+                write(sock, temp2,(20+length)); 
                 
                 //Send Body
                 write(sock, temp, lSize);
@@ -311,18 +310,13 @@ int main(int argc, const char * argv[]) {
                 std::cout << "Error:unable to create thread," << rc <<  std::endl;
                 exit(-1);
             }else{
-              
+                
                 
                 openConnections++;
-                           }
+            }
         }
         
     }
-    
-    //close();
-    
-    std::cout <<"End!\n";
-    
     return 0;
     
 }
