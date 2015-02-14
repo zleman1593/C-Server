@@ -44,7 +44,7 @@ void error(const char *msg)
 void *handelRequest(void *sock_fd)
 {
     long sock = (long)sock_fd;
-    
+    int requestNum = 0;
     char buffer[2000];
     bool is11 = true;
     while (is11) {
@@ -59,6 +59,7 @@ void *handelRequest(void *sock_fd)
         int num = select(sock+1, &readset, NULL, NULL, &threadTimeout);
         if(num >0)
         {//data present to read
+            requestNum++;
             n = read(sock,buffer,2000);
             //std::cout << buffer<<std::endl;
         }
@@ -122,18 +123,22 @@ void *handelRequest(void *sock_fd)
                     is11 = false;
                     openConnections--;
                 }
+                char* newHTTP = httpstr;
                 //HTTP request ok
                 char root[]  = "/Users/zackleman/Desktop/site";
                 FILE *fs = fopen(strcat(root,urlstr), "r");
+
                 if (fs == NULL) {
                     //could be 404, 403, 401
                     if (errno == EACCES){
                         std::cout << "Permission denied" << std::endl;
                         write(sock, "403: Permission denied", 16);
+                        continue;
                         
                     } else{
                         std::cout << "404: Not Found" << std::endl;
                         write(sock, "404: Not Found", 16);
+                        continue;
                     }
                 }
                 //clear buffer
@@ -155,11 +160,14 @@ void *handelRequest(void *sock_fd)
                 temp = (char *)alloca(contents.size() + 1);
                 memcpy(temp, contents.c_str(), contents.size() + 1);
                 
-                
-               //if (!strcmp(httpstr, "HTTP/1.1")) {
+                if (!strcmp(newHTTP, "HTTP/1.1")) {
                     //Send HTTP status to 1.1 client
-                write(sock, "HTTP/1.1 200 Ok\r\n", 18);
-                //}
+                    write(sock, "HTTP/1.1 200 Ok\r\n", 18);
+                }
+                else
+                {
+                    write(sock, "HTTP/1.0 200 Ok\r\n", 18);
+                }
                
                 
                 
@@ -216,6 +224,7 @@ void *handelRequest(void *sock_fd)
                 //incorrect HTTP version call
                 std::cout << "400: Bad Request" << std::endl;
                 write(sock, "400: Bad Request", 16);
+                continue;
             }
         }
         else
@@ -223,13 +232,22 @@ void *handelRequest(void *sock_fd)
             //no valid request (400)
             std::cout << "400: Bad Request" << std::endl;
             write(sock, "400: Bad Request", 16);
+            if (requestNum) {
+                //clear buffer
+                memset(buffer, 0, 2000);
+            }
+            else
+            {
+                openConnections--;
+                pthread_exit(NULL);
+            }
         }
         
         if (n < 0) error("ERROR reading from socket");
         //printf("Here is the message: %s\n",buffer);
         
         
-        std::cout << "Handeling Request! Socket Descriptor: "  << sock <<    std::endl;  
+        std::cout << "Handeling Request! Socket Descriptor: "  << sock <<    std::endl;
     }
     openConnections--;
     pthread_exit(NULL);
@@ -240,8 +258,9 @@ int main(int argc, const char * argv[]) {
     //Prints the comamnd line arguments
     std::cout << "argc = " << argc << std::endl;
     for(int i = 0; i < argc; i++)
+    {
         std::cout << "argv[" << i << "] = " << argv[i] << std::endl;
-    
+    }
     
     // Create socket to listen for connections
     int sock_fd = socket(AF_INET, SOCK_STREAM, 0);
@@ -254,8 +273,13 @@ int main(int argc, const char * argv[]) {
     /*if (argv[i]){
      myaddr.sin_port = htons(argv[i]);
      }else{*/
-    myaddr.sin_port = htons(DEFAULT_PORT); // use port default of 8888
-    // }
+    if (argc > 1) {
+        myaddr.sin_port = htons(atoi(argv[1]));
+        std::cout << myaddr.sin_port << std::endl;
+    }
+    else{
+        myaddr.sin_port = htons(DEFAULT_PORT); // use port default of 8888
+    }
     myaddr.sin_family = AF_INET;
     myaddr.sin_addr.s_addr = htonl(INADDR_ANY);
     
