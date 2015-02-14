@@ -1,0 +1,127 @@
+div.jcarousel-container {width:800px;}
+
+.jcarousel-skin-tango .jcarousel-container-horizontal {
+width: 896px;
+padding: 20px 40px;
+-moz-border-radius: 0px;
+-webkit-border-radius: 0px;
+border-radius: 0px;
+background: transparent;
+border: 0px solid #346F97;
+}
+
+.jcarousel-skin-tango .jcarousel-clip-horizontal {
+width: 900px;
+height: 80px;
+}
+
+.jcarousel-skin-tango .jcarousel-item {
+width: 290px;
+height: 80px;
+}
+
+.jcarousel-skin-tango .jcarousel-prev-horizontal {
+background: transparent url(/includes/lib/img/homepage/bowdoin-events-bar-prev.png) no-repeat 0 0;
+}
+ 
+.jcarousel-skin-tango .jcarousel-next-horizontal {
+background: transparent url(/includes/lib/img/homepage/bowdoin-events-bar-next.png) no-repeat 0 0;
+}
+ 
+ 
+div.pony {
+    width: 300px;
+    padding:7px;
+    height: 75px;
+    font-size:11px;
+    color:#373737;
+    font-family:Arial;
+}
+
+div.pony img {float:left;padding-right:12px;max-width:85px;}
+div.pony div.txt {float:left;width:200px;font-family: Verdana, Geneva, sans-serif;
+color: #333;
+font-size: 11px;
+font-weight: normal;
+font-style: normal;}
+div.pony div.txt h4 {margin:0px;font-family: Verdana, Geneva, sans-serif;
+font-size: 12px;
+color: #2F5577;
+font-weight: bold;}
+div.pony div.txt p {
+margin:0px;font-family: Verdana, Geneva, sans-serif;
+font-size: 11px;
+color: #2F5577;
+font-weight: normal;
+line-height:13px;
+}
+
+
+
+
+
+.calendar-bar {
+background-color: #F7F7F7;
+height: 150px;
+width: 980px;
+
+}
+
+div.nc {font-family: verdana;
+font-size: 15px;
+font-weight: bold;
+color: #2F5577;
+margin-left: 26px;
+padding-left:2px;
+padding-top: 12px;
+width: 738px;
+
+
+float:left;
+}
+
+div.more-events a {
+font-family: verdana;
+font-size: 11px;
+font-weight:normal;
+text-align:right;
+color: #09C;
+float:right;
+padding: 0px;
+margin-top: 12px;
+margin-right: 12px;
+margin-bottom: 0px;
+margin-left: 0px;
+clip: rect(auto,auto,auto,auto);
+text-decoration: none;
+border-bottom: 1px solid #ddd;
+
+}
+
+div.barlr {clear:both;width: 980px;}
+
+div.ncb {
+margin-left:0px;
+margin-top:0px;
+width:978px;
+padding-left:2px;
+clear:both;
+background-color: rgba(204, 204, 204, 0.2);
+}
+
+.topleftsocialicons {
+width:225px;
+height:30px;
+}
+
+/* campus announcements*/
+fieldset {
+margin: 8px 0;
+padding: 8px;
+border: 1px solid #ccc;
+}
+
+legend {
+font: bold 16px Georgia, sans-serif;
+color: #406690;
+}

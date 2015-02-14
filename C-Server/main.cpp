@@ -20,7 +20,7 @@
 #include <cerrno>
 #include <vector>
 #include <time.h>
-#define DEFAULT_PORT 8887
+#define DEFAULT_PORT 8888
 #define NUM_THREADS     5
 #define MAX_BACKLOG     10
 #define THREAD_TIMEOUT  60

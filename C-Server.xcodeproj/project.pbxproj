@@ -28,6 +28,49 @@
 		A226B7E41A8EB27200A60779 /* index.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = index.html; path = ../../../../../Desktop/index.html; sourceTree = "<group>"; };
 		A23CB71B1A798C12009C5469 /* C-Server */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "C-Server"; sourceTree = BUILT_PRODUCTS_DIR; };
 		A23CB71E1A798C12009C5469 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		A272CE441A8FDB3600040F8A /* 710915.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = 710915.jpg; sourceTree = "<group>"; };
+		A272CE451A8FDB3600040F8A /* 735179.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = 735179.jpg; sourceTree = "<group>"; };
+		A272CE461A8FDB3600040F8A /* 735180.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = 735180.jpg; sourceTree = "<group>"; };
+		A272CE471A8FDB3600040F8A /* 735181.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = 735181.jpg; sourceTree = "<group>"; };
+		A272CE481A8FDB3600040F8A /* 735182.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = 735182.jpg; sourceTree = "<group>"; };
+		A272CE491A8FDB3600040F8A /* 735183.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = 735183.jpg; sourceTree = "<group>"; };
+		A272CE4A1A8FDB3600040F8A /* 735184.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = 735184.jpg; sourceTree = "<group>"; };
+		A272CE4B1A8FDB3600040F8A /* 738079.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = 738079.jpg; sourceTree = "<group>"; };
+		A272CE4C1A8FDB3600040F8A /* 740124.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = 740124.jpg; sourceTree = "<group>"; };
+		A272CE4D1A8FDB3600040F8A /* 740207.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = 740207.jpg; sourceTree = "<group>"; };
+		A272CE4E1A8FDB3600040F8A /* 740566.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = 740566.jpg; sourceTree = "<group>"; };
+		A272CE4F1A8FDB3600040F8A /* 741458.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = 741458.jpg; sourceTree = "<group>"; };
+		A272CE501A8FDB3600040F8A /* 756239.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = 756239.jpg; sourceTree = "<group>"; };
+		A272CE511A8FDB3600040F8A /* 757142.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = 757142.jpg; sourceTree = "<group>"; };
+		A272CE521A8FDB3600040F8A /* 757144.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = 757144.jpg; sourceTree = "<group>"; };
+		A272CE531A8FDB3600040F8A /* 758339.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = 758339.jpg; sourceTree = "<group>"; };
+		A272CE541A8FDB3600040F8A /* 758859.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = 758859.jpg; sourceTree = "<group>"; };
+		A272CE551A8FDB3600040F8A /* 759393.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = 759393.jpg; sourceTree = "<group>"; };
+		A272CE561A8FDB3600040F8A /* 760235.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = 760235.jpg; sourceTree = "<group>"; };
+		A272CE571A8FDB3600040F8A /* 760766.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = 760766.jpg; sourceTree = "<group>"; };
+		A272CE581A8FDB3600040F8A /* bottom-l1.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = "bottom-l1.gif"; sourceTree = "<group>"; };
+		A272CE591A8FDB3600040F8A /* bowdoin-college.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = "bowdoin-college.gif"; sourceTree = "<group>"; };
+		A272CE5A1A8FDB3600040F8A /* bowdoin-wordmark-295x60.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bowdoin-wordmark-295x60.png"; sourceTree = "<group>"; };
+		A272CE5B1A8FDB3600040F8A /* Bowdoin.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = Bowdoin.html; sourceTree = "<group>"; };
+		A272CE5C1A8FDB3600040F8A /* carousel-styles.css */ = {isa = PBXFileReference; lastKnownFileType = text.css; path = "carousel-styles.css"; sourceTree = "<group>"; };
+		A272CE5D1A8FDB3600040F8A /* facebook.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = facebook.png; sourceTree = "<group>"; };
+		A272CE5E1A8FDB3600040F8A /* ga.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = ga.js; sourceTree = "<group>"; };
+		A272CE5F1A8FDB3600040F8A /* gplus-icon16.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "gplus-icon16.png"; sourceTree = "<group>"; };
+		A272CE601A8FDB3600040F8A /* instagram-28x28.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "instagram-28x28.png"; sourceTree = "<group>"; };
+		A272CE611A8FDB3600040F8A /* jquery-1.4.2.min.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = "jquery-1.4.2.min.js"; sourceTree = "<group>"; };
+		A272CE621A8FDB3600040F8A /* jquery-ui-1.8.custom.min.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = "jquery-ui-1.8.custom.min.js"; sourceTree = "<group>"; };
+		A272CE631A8FDB3600040F8A /* jquery.cycle.all.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = jquery.cycle.all.js; sourceTree = "<group>"; };
+		A272CE641A8FDB3600040F8A /* jquery.jcarousel.min.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = jquery.jcarousel.min.js; sourceTree = "<group>"; };
+		A272CE651A8FDB3600040F8A /* linkedin.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = linkedin.png; sourceTree = "<group>"; };
+		A272CE661A8FDB3600040F8A /* MLK-banner.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "MLK-banner.jpg"; sourceTree = "<group>"; };
+		A272CE671A8FDB3600040F8A /* navigationUnder.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = navigationUnder.js; sourceTree = "<group>"; };
+		A272CE681A8FDB3600040F8A /* Reunion-Convocation-Banner.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "Reunion-Convocation-Banner.jpg"; sourceTree = "<group>"; };
+		A272CE691A8FDB3600040F8A /* Seashore-Diaries-banner.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "Seashore-Diaries-banner.jpg"; sourceTree = "<group>"; };
+		A272CE6A1A8FDB3600040F8A /* skin.css */ = {isa = PBXFileReference; lastKnownFileType = text.css; path = skin.css; sourceTree = "<group>"; };
+		A272CE6B1A8FDB3600040F8A /* top-l1.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = "top-l1.gif"; sourceTree = "<group>"; };
+		A272CE6C1A8FDB3600040F8A /* twitter.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = twitter.png; sourceTree = "<group>"; };
+		A272CE6D1A8FDB3600040F8A /* vimeo-28x28.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "vimeo-28x28.png"; sourceTree = "<group>"; };
+		A272CE6E1A8FDB3600040F8A /* Web-Banner-Presidential-Announcement-2015-final.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "Web-Banner-Presidential-Announcement-2015-final.jpg"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -60,7 +103,7 @@
 		A23CB71D1A798C12009C5469 /* C-Server */ = {
 			isa = PBXGroup;
 			children = (
-				A272CE161A8FD8E000040F8A /* site */,
+				A272CE431A8FDB3600040F8A /* site */,
 				8C9C6F771A8FBE21005E7762 /* cloud.jpg */,
 				A20C75801A799D1F00D3F82A /* MakeFile.make */,
 				A23CB71E1A798C12009C5469 /* main.cpp */,
@@ -69,12 +112,54 @@
 			path = "C-Server";
 			sourceTree = "<group>";
 		};
-		A272CE161A8FD8E000040F8A /* site */ = {
+		A272CE431A8FDB3600040F8A /* site */ = {
 			isa = PBXGroup;
 			children = (
+				A272CE441A8FDB3600040F8A /* 710915.jpg */,
+				A272CE451A8FDB3600040F8A /* 735179.jpg */,
+				A272CE461A8FDB3600040F8A /* 735180.jpg */,
+				A272CE471A8FDB3600040F8A /* 735181.jpg */,
+				A272CE481A8FDB3600040F8A /* 735182.jpg */,
+				A272CE491A8FDB3600040F8A /* 735183.jpg */,
+				A272CE4A1A8FDB3600040F8A /* 735184.jpg */,
+				A272CE4B1A8FDB3600040F8A /* 738079.jpg */,
+				A272CE4C1A8FDB3600040F8A /* 740124.jpg */,
+				A272CE4D1A8FDB3600040F8A /* 740207.jpg */,
+				A272CE4E1A8FDB3600040F8A /* 740566.jpg */,
+				A272CE4F1A8FDB3600040F8A /* 741458.jpg */,
+				A272CE501A8FDB3600040F8A /* 756239.jpg */,
+				A272CE511A8FDB3600040F8A /* 757142.jpg */,
+				A272CE521A8FDB3600040F8A /* 757144.jpg */,
+				A272CE531A8FDB3600040F8A /* 758339.jpg */,
+				A272CE541A8FDB3600040F8A /* 758859.jpg */,
+				A272CE551A8FDB3600040F8A /* 759393.jpg */,
+				A272CE561A8FDB3600040F8A /* 760235.jpg */,
+				A272CE571A8FDB3600040F8A /* 760766.jpg */,
+				A272CE581A8FDB3600040F8A /* bottom-l1.gif */,
+				A272CE591A8FDB3600040F8A /* bowdoin-college.gif */,
+				A272CE5A1A8FDB3600040F8A /* bowdoin-wordmark-295x60.png */,
+				A272CE5B1A8FDB3600040F8A /* Bowdoin.html */,
+				A272CE5C1A8FDB3600040F8A /* carousel-styles.css */,
+				A272CE5D1A8FDB3600040F8A /* facebook.png */,
+				A272CE5E1A8FDB3600040F8A /* ga.js */,
+				A272CE5F1A8FDB3600040F8A /* gplus-icon16.png */,
+				A272CE601A8FDB3600040F8A /* instagram-28x28.png */,
+				A272CE611A8FDB3600040F8A /* jquery-1.4.2.min.js */,
+				A272CE621A8FDB3600040F8A /* jquery-ui-1.8.custom.min.js */,
+				A272CE631A8FDB3600040F8A /* jquery.cycle.all.js */,
+				A272CE641A8FDB3600040F8A /* jquery.jcarousel.min.js */,
+				A272CE651A8FDB3600040F8A /* linkedin.png */,
+				A272CE661A8FDB3600040F8A /* MLK-banner.jpg */,
+				A272CE671A8FDB3600040F8A /* navigationUnder.js */,
+				A272CE681A8FDB3600040F8A /* Reunion-Convocation-Banner.jpg */,
+				A272CE691A8FDB3600040F8A /* Seashore-Diaries-banner.jpg */,
+				A272CE6A1A8FDB3600040F8A /* skin.css */,
+				A272CE6B1A8FDB3600040F8A /* top-l1.gif */,
+				A272CE6C1A8FDB3600040F8A /* twitter.png */,
+				A272CE6D1A8FDB3600040F8A /* vimeo-28x28.png */,
+				A272CE6E1A8FDB3600040F8A /* Web-Banner-Presidential-Announcement-2015-final.jpg */,
 			);
-			name = site;
-			path = ../../site;
+			path = site;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
