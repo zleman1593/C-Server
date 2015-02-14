@@ -123,14 +123,10 @@ void *handelRequest(void *sock_fd)
                     openConnections--;
                 }
                 //HTTP request ok
-                //try to get file path
-                //FILE *fs = fopen("/Users/thegreenfrog/Desktop/Systems/C-Server/C-Server/3C.pdf", "r");
-                
-                char root[]  = "/Users/zackleman/Desktop";
+                char root[]  = "/Users/zackleman/Desktop/site";
                 FILE *fs = fopen(strcat(root,urlstr), "r");
                 if (fs == NULL) {
                     //could be 404, 403, 401
-                    
                     if (errno == EACCES){
                         std::cout << "Permission denied" << std::endl;
                         write(sock, "403: Permission denied", 16);
@@ -160,14 +156,13 @@ void *handelRequest(void *sock_fd)
                 memcpy(temp, contents.c_str(), contents.size() + 1);
                 
                 
-               if (!strcmp(httpstr, "HTTP/1.1")) {
+               //if (!strcmp(httpstr, "HTTP/1.1")) {
                     //Send HTTP status to 1.1 client
                 write(sock, "HTTP/1.1 200 Ok\r\n", 18);
-                }
-                else
-                {
-                    write(sock, "HTTP/1.0 200 Ok\r\n", 18);
-                }
+                //}
+               
+                
+                
                 
                 //Send Date
                 char buffer [80];
@@ -190,6 +185,8 @@ void *handelRequest(void *sock_fd)
                     write(sock, "content-type: image/jpeg\r\n", 27);
                 }   else if (!strcmp(filetype, ".gif")) {
                     write(sock, "content-type: image/gif\r\n", 26);
+                } else if (!strcmp(filetype, ".txt")) {
+                    write(sock, "content-type: text/plain\r\n", 27);
                 }
 
                 
@@ -301,22 +298,6 @@ int main(int argc, const char * argv[]) {
     return 0;
     
 }
-
-
-
-
-/*
- 
- Forever loop:
- Listen for connections
- Accept new connection from incoming client
- Parse HTTP request
- Ensure well-formed request (return error otherwise)
- Determine if target file exists and if permissions are set properly (return error otherwise)
- Transmit contents of file to connect (by performing reads on the file and writes on the socket)
- Close the connection (if HTTP/1.0)
- 
- */
 
 
 
