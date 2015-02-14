@@ -20,7 +20,7 @@
 #include <cerrno>
 #include <vector>
 #include <time.h>
-#define DEFAULT_PORT 8888
+#define DEFAULT_PORT 8887
 #define NUM_THREADS     5
 #define MAX_BACKLOG     10
 #define THREAD_TIMEOUT  60
@@ -67,8 +67,9 @@ void *handelRequest(void *sock_fd)
         }
         else
         {//thread has reached timeout. Kill
-            pthread_exit(NULL);
              std::cout << "Closing Connection due to Timeout" << std::endl;
+            pthread_exit(NULL);
+            
         }
         
         char *requestType = (char*) malloc(n);
@@ -128,7 +129,7 @@ void *handelRequest(void *sock_fd)
                 }
                 char* newHTTP = httpstr;
                 //HTTP request ok
-                char root[]  = "/Users/zackleman/Desktop/site";
+                char root[]  = "/Users/zackleman/Desktop";
                 FILE *fs = fopen(strcat(root,urlstr), "r");
 
                 if (fs == NULL) {

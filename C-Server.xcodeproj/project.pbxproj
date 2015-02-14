@@ -28,6 +28,8 @@
 		A226B7E41A8EB27200A60779 /* index.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = index.html; path = ../../../../../Desktop/index.html; sourceTree = "<group>"; };
 		A23CB71B1A798C12009C5469 /* C-Server */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "C-Server"; sourceTree = BUILT_PRODUCTS_DIR; };
 		A23CB71E1A798C12009C5469 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		A25FB5C61A8FE5E90052B3EC /* cbb.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cbb.png; sourceTree = "<group>"; };
+		A25FB5C71A8FE5E90052B3EC /* index.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = index.html; sourceTree = "<group>"; };
 		A272CE441A8FDB3600040F8A /* 710915.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = 710915.jpg; sourceTree = "<group>"; };
 		A272CE451A8FDB3600040F8A /* 735179.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = 735179.jpg; sourceTree = "<group>"; };
 		A272CE461A8FDB3600040F8A /* 735180.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = 735180.jpg; sourceTree = "<group>"; };
@@ -103,6 +105,7 @@
 		A23CB71D1A798C12009C5469 /* C-Server */ = {
 			isa = PBXGroup;
 			children = (
+				A25FB5C51A8FE5E90052B3EC /* simple */,
 				A272CE431A8FDB3600040F8A /* site */,
 				8C9C6F771A8FBE21005E7762 /* cloud.jpg */,
 				A20C75801A799D1F00D3F82A /* MakeFile.make */,
@@ -110,6 +113,15 @@
 				A226B7E41A8EB27200A60779 /* index.html */,
 			);
 			path = "C-Server";
+			sourceTree = "<group>";
+		};
+		A25FB5C51A8FE5E90052B3EC /* simple */ = {
+			isa = PBXGroup;
+			children = (
+				A25FB5C61A8FE5E90052B3EC /* cbb.png */,
+				A25FB5C71A8FE5E90052B3EC /* index.html */,
+			);
+			path = simple;
 			sourceTree = "<group>";
 		};
 		A272CE431A8FDB3600040F8A /* site */ = {
