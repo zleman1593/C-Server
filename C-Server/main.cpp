@@ -160,14 +160,11 @@ void *handelRequest(void *sock_fd)
                 temp = (char *)alloca(contents.size() + 1);
                 memcpy(temp, contents.c_str(), contents.size() + 1);
                 
-                if (!strcmp(newHTTP, "HTTP/1.1")) {
+                //if (!strcmp(newHTTP, "HTTP/1.1")) {
                     //Send HTTP status to 1.1 client
                     write(sock, "HTTP/1.1 200 Ok\r\n", 18);
-                }
-                else
-                {
-                    write(sock, "HTTP/1.0 200 Ok\r\n", 18);
-                }
+                //}
+              
                
                 
                 
@@ -239,6 +236,7 @@ void *handelRequest(void *sock_fd)
             else
             {
                 openConnections--;
+                 std::cout << "Closing Connection" << std::endl;
                 pthread_exit(NULL);
             }
         }

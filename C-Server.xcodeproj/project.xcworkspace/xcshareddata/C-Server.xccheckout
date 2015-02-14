@@ -6,15 +6,19 @@
 	<false/>
 	<key>IDESourceControlProjectIdentifier</key>
 	<string>0B8C43B1-745A-4B77-A3B7-7C017BA766F4</string>
+	<key>IDESourceControlProjectName</key>
+	<string>C-Server</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
 		<key>91805245546B45A3BB6AB1EE062E492247A99255</key>
 		<string>https://github.com/zleman1593/C-Server.git</string>
 	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>C-Server.xcodeproj</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
 		<key>91805245546B45A3BB6AB1EE062E492247A99255</key>
-		<string>C-Server/</string>
+		<string>../..</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
 	<string>https://github.com/zleman1593/C-Server.git</string>
