@@ -43,7 +43,9 @@ void error(const char *msg)
 
 void *handelRequest(void *sock_fd)
 {
+    
     long sock = (long)sock_fd;
+    std::cout << "Handeling Request! Socket Descriptor: "  << sock <<    std::endl;
     int requestNum = 0;
     char buffer[2000];
     bool is11 = true;
@@ -246,7 +248,7 @@ void *handelRequest(void *sock_fd)
         //printf("Here is the message: %s\n",buffer);
         
         
-        std::cout << "Handeling Request! Socket Descriptor: "  << sock <<    std::endl;
+        
     }
     openConnections--;
      std::cout << "Closing Connection" << std::endl;
