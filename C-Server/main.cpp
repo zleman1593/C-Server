@@ -49,7 +49,7 @@ void *handelRequest(void *sock_fd)
     bool is11 = true;
     while (is11) {
         int n;
-        threadTimeout.tv_sec = 60;
+        threadTimeout.tv_sec = 60/openConnections;
         threadTimeout.tv_usec = 0;
         
         bzero(buffer,2000);
@@ -160,11 +160,22 @@ void *handelRequest(void *sock_fd)
                 memcpy(temp, contents.c_str(), contents.size() + 1);
                 
                 
-             //   if (!strcmp(httpstr, "HTTP/1.1")) {
+               if (!strcmp(httpstr, "HTTP/1.1")) {
                     //Send HTTP status to 1.1 client
-                    write(sock, "HTTP/1.1 200 Ok\r\n", 18);
-                //}
+                write(sock, "HTTP/1.1 200 Ok\r\n", 18);
+                }
+                else
+                {
+                    write(sock, "HTTP/1.0 200 Ok\r\n", 18);
+                }
                 
+                //Send Date
+                char buffer [80];
+                time_t currentTime;
+                time(&currentTime);
+                struct tm * timeinfo = localtime(&currentTime);
+                strftime (buffer,80,"Date: %c \r\n",timeinfo);
+                write(sock, buffer, 35);
                 
                 if (!strcmp(filetype, ".html")) {
                     write(sock, "content-type: text/html\r\n", 26);
@@ -180,15 +191,7 @@ void *handelRequest(void *sock_fd)
                 }   else if (!strcmp(filetype, ".gif")) {
                     write(sock, "content-type: image/gif\r\n", 26);
                 }
-                
-                
-                //Send Date
-                char buffer [80];
-                time_t currentTime;
-                time(&currentTime);
-                struct tm * timeinfo = localtime(&currentTime);
-                strftime (buffer,80,"Date: %c \r\n",timeinfo);
-                write(sock, buffer, 35);
+
                 
                 //Send Content Length
                 std::ostringstream oss;
@@ -197,7 +200,6 @@ void *handelRequest(void *sock_fd)
                 char *temp2;
                 temp2 = (char *)alloca(var.size() + 1);
                 memcpy(temp2, var.c_str(), var.size() + 1);
-                
                 
                 int length = 1;
                 int x = (int) lSize;
@@ -224,37 +226,16 @@ void *handelRequest(void *sock_fd)
             //no valid request (400)
             std::cout << "400: Bad Request" << std::endl;
             write(sock, "400: Bad Request", 16);
-            
-            // 404 (not found),
-            
-            
-            //403 (forbidden, but request correct),
-            //401 (invalid credentials)
-            //400 (bad request) status codes
         }
         
         if (n < 0) error("ERROR reading from socket");
         //printf("Here is the message: %s\n",buffer);
         
         
-        std::cout << "Handeling Request! Socket Descriptor: "  << sock <<    std::endl;
-        
-        for (int j; j < vectorThread.size(); ++j) {
-            if (vectorThread.at(j)->pid == pthread_self()) {
-                vectorThread.at(j)->startTime = time(NULL);
-            }
-        }
-        
-        
+        std::cout << "Handeling Request! Socket Descriptor: "  << sock <<    std::endl;  
     }
     openConnections--;
     pthread_exit(NULL);
-}
-
-//returns true if a thread was killed. false otherwise
-bool manageThreads()
-{
-    return false;
 }
 
 
@@ -295,8 +276,6 @@ int main(int argc, const char * argv[]) {
     
     int adressSize = sizeof(myaddr);
     int *size = &adressSize;
-    std::vector<threadStruct*> vectorThread;
-    time_t timer;
     
     while(true)
     {
@@ -309,14 +288,11 @@ int main(int argc, const char * argv[]) {
         } else{
             pthread_t newThread;
             std::cout << "Creating  new thread " <<    std::endl;
-            time(&timer);
             int rc = pthread_create(&newThread, NULL, handelRequest, (void *)newSocketfd);
             if (rc){
                 std::cout << "Error:unable to create thread," << rc <<  std::endl;
                 exit(-1);
             }else{
-                
-                
                 openConnections++;
             }
         }
