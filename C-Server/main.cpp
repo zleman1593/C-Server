@@ -48,16 +48,23 @@ void *handelRequest(void *sock_fd)
     std::cout << "Handeling Request! Socket Descriptor: "  << sock <<    std::endl;
     int requestNum = 0;
     char buffer[2000];
+    bzero(buffer,2000);
     bool is11 = true;
+    int n;
+    char* requestType = (char*) malloc(2000);
+    char* urlstr = (char*) malloc(2000);
+    char* httpstr = (char*) malloc(2000);
+    char* filetype = (char*) malloc(2000);
+    fd_set readset;
+    FD_ZERO(&readset);
+    FD_SET(sock, &readset);
+    threadTimeout.tv_sec = 60/openConnections;
+    threadTimeout.tv_usec = 0;
     while (is11) {
-        int n;
-        threadTimeout.tv_sec = 60/openConnections;
-        threadTimeout.tv_usec = 0;
+        std::cout << "Starting loop again" << std::endl;
+
+        std::cout << "waiting for request" << std::endl;
         
-        bzero(buffer,2000);
-        fd_set readset;
-        FD_ZERO(&readset);
-        FD_SET(sock, &readset);
         int num = select(sock+1, &readset, NULL, NULL, &threadTimeout);
         if(num >0)
         {//data present to read
@@ -71,10 +78,8 @@ void *handelRequest(void *sock_fd)
             pthread_exit(NULL);
             
         }
-        
-        char *requestType = (char*) malloc(n);
+
         int i = 0;
-        
         while (isalpha(buffer[i])) {
             requestType[i] = buffer[i];
             i++;
@@ -88,7 +93,6 @@ void *handelRequest(void *sock_fd)
             }
             //get the url path
             int start = i;
-            char* urlstr = (char*) malloc(n);
             int it = 0;
             while (isspace(buffer[start]) == 0) {
                 urlstr[it] = buffer[start];
@@ -96,14 +100,14 @@ void *handelRequest(void *sock_fd)
                 start++;
             }
             //variable holding file type
-            char* filetype = urlstr;
-            if ((filetype = std::strchr(filetype, '.')) != NULL) {
+            filetype = urlstr;
+            if ((filetype = strchr(filetype, '.')) != NULL) {
             }
             else
             {
                 //interpret / as index.html
-                filetype = ".html";
-                urlstr = "/index.html";
+                strcpy(filetype, ".html");
+                strcpy(urlstr, "/index.html");
             }
             i = start;
             std::cout << "path: " << urlstr << std::endl;
@@ -112,7 +116,6 @@ void *handelRequest(void *sock_fd)
                 i++;
             }
             //get HTTP type
-            char* httpstr = (char*) malloc(n);
             it = 0;
             while (isspace(buffer[i]) == 0) {
                 httpstr[it] = buffer[i];
@@ -127,9 +130,9 @@ void *handelRequest(void *sock_fd)
                     is11 = false;
                     openConnections--;
                 }
-                char* newHTTP = httpstr;
                 //HTTP request ok
-                char root[]  = "/Users/zackleman/Desktop";
+                char root[]  = "/home/clu/site";
+                //char root[]  = "/Users/thegreenfrog/Desktop/Systems/C-Server/C-Server/simple";
                 FILE *fs = fopen(strcat(root,urlstr), "r");
 
                 if (fs == NULL) {
@@ -154,33 +157,31 @@ void *handelRequest(void *sock_fd)
                 rewind(fs);
                 fread(&contents[0], 1, contents.size(), fs);
                 
-                
                 fseek (fs , 0 , SEEK_END);
                 long lSize = ftell (fs);
                 rewind (fs);
                 std::cout << lSize << std::endl;
                 
-                char *temp;
-                temp = (char *)alloca(contents.size() + 1);
+                char *temp = (char *)malloc(contents.size() + 1);
+                if (temp == NULL) {
+                    std::cout << "variable not given memory" << std::endl;
+                }
                 memcpy(temp, contents.c_str(), contents.size() + 1);
                 
+                std::cout << "copies to temps" << std::endl;
                 //if (!strcmp(newHTTP, "HTTP/1.1")) {
                     //Send HTTP status to 1.1 client
                     write(sock, "HTTP/1.1 200 Ok\r\n", 18);
                 //}
-              
-               
-                
-                
-                
+
                 //Send Date
-                char buffer [80];
+                char timebuf [80];
                 time_t currentTime;
                 time(&currentTime);
                 struct tm * timeinfo = localtime(&currentTime);
-                strftime (buffer,80,"Date: %c \r\n",timeinfo);
-                write(sock, buffer, 35);
-                
+                strftime (timebuf,80,"Date: %c \r\n",timeinfo);
+                write(sock, timebuf, 35);
+
                 if (!strcmp(filetype, ".html")) {
                     write(sock, "content-type: text/html\r\n", 26);
                 }
@@ -198,7 +199,6 @@ void *handelRequest(void *sock_fd)
                     write(sock, "content-type: text/plain\r\n", 27);
                 }
 
-                
                 //Send Content Length
                 std::ostringstream oss;
                 oss << "content-length: " << lSize << "\r\n\r\n";
@@ -212,12 +212,12 @@ void *handelRequest(void *sock_fd)
                 while ( x /= 10 )
                     length++;
                 
-               
+                std::cout << "sending temps" << std::endl;
                 write(sock, temp2,(20+length));
                 
                 //Send Body
                 write(sock, temp, lSize);
-                
+                std::cout << "sent temps" << std::endl;
                 
             }
             else
