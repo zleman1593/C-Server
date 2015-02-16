@@ -196,7 +196,11 @@ void *handelRequest(void *inputStruct)
                     send(sock, "content-type: image/gif\r\n", 26, 0);
                 } else if (!strcmp(filetype, ".txt")) {
                     send(sock, "content-type: text/plain\r\n", 27, 0);
-                }
+                }else if (!strcmp(filetype, ".css")) {
+                  send(sock, "content-type: text/css\r\n", 25, 0);
+                  }else if (!strcmp(filetype, ".js")) {
+                  send(sock, "content-type: text/javascript\r\n", 32, 0);
+                  }
 
                 //Send Content Length
                 std::ostringstream oss;
