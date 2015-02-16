@@ -141,9 +141,13 @@ void *handelRequest(void *sock_fd)
                     openConnections--;
                 }
                 //HTTP request ok
-                char root[]  = "/home/clu/site";
+                char root[] = "/home/clu/site";
+                char fullPath[n];
+                for (int i = 0; i < strlen(root); i++) {
+                    fullPath[i] = root[i];
+                }
                 //char root[]  = "/Users/thegreenfrog/Desktop/Systems/C-Server/C-Server/simple";
-                FILE *fs = fopen(strcat(root,urlstr), "r");
+                FILE *fs = fopen(strcat(fullPath,urlstr), "r");
 
                 if (fs == NULL) {
                     //could be 404, 403, 401
