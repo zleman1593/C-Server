@@ -53,6 +53,7 @@ void *handelRequest(void *inputStruct)
     char* urlstr = (char*) malloc(2000);
     char* httpstr = (char*) malloc(2000);
     char* filetype = (char*) malloc(2000);
+    char* fullPath = (char*) malloc(2000);
     fd_set readset;
     FD_ZERO(&readset);
     FD_SET(sock, &readset);
@@ -63,6 +64,7 @@ void *handelRequest(void *inputStruct)
 
         std::cout << "waiting for request" << std::endl;
         
+        strcpy(fullPath, inputArg->root);
         int num = select(sock+1, &readset, NULL, NULL, &threadTimeout);
         if(num >0)
         {//data present to read
@@ -140,12 +142,12 @@ void *handelRequest(void *inputStruct)
                 }
                 //HTTP request ok
                 //char root[] = "/home/clu/site";
-                char fullPath[n];
-                for (int i = 0; i < strlen(inputArg->root); i++) {
-                    fullPath[i] = inputArg->root[i];
-                }
-                //char root[]  = "/Users/thegreenfrog/Desktop/Systems/C-Server/C-Server/simple";
-                FILE *fs = fopen(strcat(fullPath,urlstr), "r");
+                
+                strcat(fullPath,urlstr);
+                puts(fullPath);
+                std::cout << "full: " << inputArg->root<<std::endl;
+                
+                FILE *fs = fopen(fullPath, "r");
 
                 if (fs == NULL) {
                     //could be 404, 403, 401
