@@ -70,6 +70,12 @@ void *handelRequest(void *sock_fd)
         {//data present to read
             requestNum++;
             n = read(sock,buffer,2000);
+            if (n > 0) {
+                memset(requestType, 0, 2000);
+                memset(urlstr, 0, 2000);
+                memset(httpstr, 0, 2000);
+                memset(filetype, 0, 2000);
+            }
             //std::cout << buffer<<std::endl;
         }
         else
@@ -88,10 +94,12 @@ void *handelRequest(void *sock_fd)
         if (strcmp(requestType, "GET") == 0) {
             //GET request present
             //skip space
+            std::cout << "skipping space" << std::endl;
             while (isspace(buffer[i])) {
                 i++;
             }
             //get the url path
+            std::cout << "getting url path" << std::endl;
             int start = i;
             int it = 0;
             while (isspace(buffer[start]) == 0) {
@@ -99,16 +107,17 @@ void *handelRequest(void *sock_fd)
                 it++;
                 start++;
             }
+            std::cout << "url: " << urlstr << std::endl;
             //variable holding file type
             filetype = urlstr;
-            if ((filetype = strchr(filetype, '.')) != NULL) {
-            }
-            else
-            {
+            std::cout << "getting file type" << std::endl;
+            if ((filetype = strchr(filetype, '.')) == NULL) {
                 //interpret / as index.html
+                std::cout << "hardcoding file ending" << std::endl;
                 strcpy(filetype, ".html");
                 strcpy(urlstr, "/index.html");
             }
+            std::cout << "finished hard coding" << std::endl;
             i = start;
             std::cout << "path: " << urlstr << std::endl;
             //MAKE SURE WE CHECK URL PATH FITS PATH PATTERN
@@ -116,6 +125,7 @@ void *handelRequest(void *sock_fd)
                 i++;
             }
             //get HTTP type
+            std::cout << "getting HTTP type" << std::endl;
             it = 0;
             while (isspace(buffer[i]) == 0) {
                 httpstr[it] = buffer[i];
@@ -139,12 +149,12 @@ void *handelRequest(void *sock_fd)
                     //could be 404, 403, 401
                     if (errno == EACCES){
                         std::cout << "Permission denied" << std::endl;
-                        write(sock, "403: Permission denied", 16);
+                        send(sock, "403: Permission denied", 16, 0);
                         continue;
                         
                     } else{
                         std::cout << "404: Not Found" << std::endl;
-                        write(sock, "404: Not Found", 16);
+                        send(sock, "404: Not Found", 16, 0);
                         continue;
                     }
                 }
@@ -171,7 +181,7 @@ void *handelRequest(void *sock_fd)
                 std::cout << "copies to temps" << std::endl;
                 //if (!strcmp(newHTTP, "HTTP/1.1")) {
                     //Send HTTP status to 1.1 client
-                    write(sock, "HTTP/1.1 200 Ok\r\n", 18);
+                    send(sock, "HTTP/1.1 200 Ok\r\n", 18, 0);
                 //}
 
                 //Send Date
@@ -180,23 +190,23 @@ void *handelRequest(void *sock_fd)
                 time(&currentTime);
                 struct tm * timeinfo = localtime(&currentTime);
                 strftime (timebuf,80,"Date: %c \r\n",timeinfo);
-                write(sock, timebuf, 35);
+                send(sock, timebuf, 35, 0);
 
                 if (!strcmp(filetype, ".html")) {
-                    write(sock, "content-type: text/html\r\n", 26);
+                    send(sock, "content-type: text/html\r\n", 26, 0);
                 }
                 else if (!strcmp(filetype, ".pdf"))
                 {
-                    write(sock, "content-type: application/pdf\r\n", 32);
+                    send(sock, "content-type: application/pdf\r\n", 32, 0);
                 }
                 else if (!strcmp(filetype, ".png")) {
-                    write(sock, "content-type: image/png\r\n", 26);
+                    send(sock, "content-type: image/png\r\n", 26, 0);
                 }  else if (!strcmp(filetype, ".jpg") || !strcmp(filetype, ".jpeg")) {
-                    write(sock, "content-type: image/jpeg\r\n", 27);
+                    send(sock, "content-type: image/jpeg\r\n", 27, 0);
                 }   else if (!strcmp(filetype, ".gif")) {
-                    write(sock, "content-type: image/gif\r\n", 26);
+                    send(sock, "content-type: image/gif\r\n", 26, 0);
                 } else if (!strcmp(filetype, ".txt")) {
-                    write(sock, "content-type: text/plain\r\n", 27);
+                    send(sock, "content-type: text/plain\r\n", 27, 0);
                 }
 
                 //Send Content Length
@@ -213,10 +223,10 @@ void *handelRequest(void *sock_fd)
                     length++;
                 
                 std::cout << "sending temps" << std::endl;
-                write(sock, temp2,(20+length));
+                send(sock, temp2,(20+length), 0);
                 
                 //Send Body
-                write(sock, temp, lSize);
+                send(sock, temp, lSize, 0);
                 std::cout << "sent temps" << std::endl;
                 
             }
@@ -224,7 +234,7 @@ void *handelRequest(void *sock_fd)
             {
                 //incorrect HTTP version call
                 std::cout << "400: Bad Request" << std::endl;
-                write(sock, "400: Bad Request", 16);
+                send(sock, "400: Bad Request", 16, 0);
                 continue;
             }
         }
@@ -232,7 +242,7 @@ void *handelRequest(void *sock_fd)
         {
             //no valid request (400)
             std::cout << "400: Bad Request" << std::endl;
-            write(sock, "400: Bad Request", 16);
+            send(sock, "400: Bad Request", 16, 0);
             if (requestNum) {
                 //clear buffer
                 memset(buffer, 0, 2000);
@@ -303,7 +313,7 @@ int main(int argc, const char * argv[]) {
     
     while(true)
     {
-        int newSocketfd = accept(sock_fd, (struct sockaddr*) &myaddr, (socklen_t *) &size );
+        int newSocketfd = accept(sock_fd, (struct sockaddr*) &myaddr, (socklen_t *) size );
         
         if( newSocketfd < 0)
         {
