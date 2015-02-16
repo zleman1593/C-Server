@@ -60,9 +60,6 @@ void *handelRequest(void *inputStruct)
     threadTimeout.tv_sec = 60/openConnections;
     threadTimeout.tv_usec = 0;
     while (is11) {
-        std::cout << "Starting loop again" << std::endl;
-
-        std::cout << "waiting for request" << std::endl;
         
         strcpy(fullPath, inputArg->root);
         int num = select(sock+1, &readset, NULL, NULL, &threadTimeout);
@@ -76,7 +73,6 @@ void *handelRequest(void *inputStruct)
                 memset(httpstr, 0, 2000);
                 memset(filetype, 0, 2000);
             }
-            //std::cout << buffer<<std::endl;
         }
         else
         {//thread has reached timeout. Kill
@@ -94,12 +90,10 @@ void *handelRequest(void *inputStruct)
         if (strcmp(requestType, "GET") == 0) {
             //GET request present
             //skip space
-            std::cout << "skipping space" << std::endl;
             while (isspace(buffer[i])) {
                 i++;
             }
             //get the url path
-            std::cout << "getting url path" << std::endl;
             int start = i;
             int it = 0;
             while (isspace(buffer[start]) == 0) {
@@ -107,33 +101,26 @@ void *handelRequest(void *inputStruct)
                 it++;
                 start++;
             }
-            std::cout << "url: " << urlstr << std::endl;
             //variable holding file type
             filetype = urlstr;
-            std::cout << "getting file type" << std::endl;
             if ((filetype = strchr(filetype, '.')) == NULL) {
                 //interpret / as index.html
-                std::cout << "hardcoding file ending" << std::endl;
                 strcpy(filetype, ".html");
                 strcpy(urlstr, "/index.html");
             }
-            std::cout << "finished hard coding" << std::endl;
             i = start;
-            std::cout << "path: " << urlstr << std::endl;
             //MAKE SURE WE CHECK URL PATH FITS PATH PATTERN
             while (isspace(buffer[i])) {
                 i++;
             }
             //get HTTP type
-            std::cout << "getting HTTP type" << std::endl;
             it = 0;
             while (isspace(buffer[i]) == 0) {
                 httpstr[it] = buffer[i];
                 it++;
                 i++;
             }
-            
-            std::cout << "HTTP Version: " << httpstr << std::endl;
+
             //determine HTTP version
             if (strcmp(httpstr, "HTTP/1.0") == 0 || strcmp(httpstr, "HTTP/1.1") == 0) {
                 if(strcmp(httpstr, "HTTP/1.0") == 0){
@@ -141,11 +128,9 @@ void *handelRequest(void *inputStruct)
                     openConnections--;
                 }
                 //HTTP request ok
-                //char root[] = "/home/clu/site";
                 
                 strcat(fullPath,urlstr);
                 puts(fullPath);
-                std::cout << "full: " << inputArg->root<<std::endl;
                 
                 FILE *fs = fopen(fullPath, "r");
 
@@ -226,12 +211,10 @@ void *handelRequest(void *inputStruct)
                 while ( x /= 10 )
                     length++;
                 
-                std::cout << "sending temps" << std::endl;
                 send(sock, temp2,(20+length), 0);
                 
                 //Send Body
                 send(sock, temp, lSize, 0);
-                std::cout << "sent temps" << std::endl;
                 
             }
             else
@@ -272,12 +255,6 @@ void *handelRequest(void *inputStruct)
 
 
 int main(int argc, const char * argv[]) {
-    //Prints the comamnd line arguments
-    std::cout << "argc = " << argc << std::endl;
-    for(int i = 0; i < argc; i++)
-    {
-        std::cout << "argv[" << i << "] = " << argv[i] << std::endl;
-    }
     
     // Create socket to listen for connections
     int sock_fd = socket(AF_INET, SOCK_STREAM, 0);
@@ -339,9 +316,7 @@ int main(int argc, const char * argv[]) {
             std::cout << "Creating  new thread " <<    std::endl;
             struct argStruct *inputStruct = new argStruct;
             inputStruct->newSocketfd = newSocketfd;
-            for (int i = 0; i < strlen(root); i++) {
-                inputStruct->root[i] = root[i];
-            }
+            strcpy(inputStruct->root, root);
             int rc = pthread_create(&newThread, NULL, handelRequest, (void *)inputStruct);
             if (rc){
                 std::cout << "Error:unable to create thread," << rc <<  std::endl;
