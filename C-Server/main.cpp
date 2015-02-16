@@ -70,13 +70,14 @@ void *handelRequest(void *sock_fd)
         {//data present to read
             requestNum++;
             n = read(sock,buffer,2000);
+            
             if (n > 0) {
                 memset(requestType, 0, 2000);
                 memset(urlstr, 0, 2000);
                 memset(httpstr, 0, 2000);
                 memset(filetype, 0, 2000);
             }
-            //std::cout << buffer<<std::endl;
+ 
         }
         else
         {//thread has reached timeout. Kill
@@ -141,12 +142,11 @@ void *handelRequest(void *sock_fd)
                     openConnections--;
                 }
                 //HTTP request ok
-                char root[] = "/home/clu/site";
+                char root[] = "/home/zleman";
                 char fullPath[n];
                 for (int i = 0; i < strlen(root); i++) {
                     fullPath[i] = root[i];
                 }
-                //char root[]  = "/Users/thegreenfrog/Desktop/Systems/C-Server/C-Server/simple";
                 FILE *fs = fopen(strcat(fullPath,urlstr), "r");
 
                 if (fs == NULL) {
@@ -211,7 +211,12 @@ void *handelRequest(void *sock_fd)
                     send(sock, "content-type: image/gif\r\n", 26, 0);
                 } else if (!strcmp(filetype, ".txt")) {
                     send(sock, "content-type: text/plain\r\n", 27, 0);
-                }
+                } /*else if (!strcmp(filetype, ".css")) {
+                    send(sock, "content-type: text/css\r\n", 25, 0);
+                }else if (!strcmp(filetype, ".js")) {
+                    send(sock, "content-type: text/javascript\r\n", 32, 0);
+                }*/
+
 
                 //Send Content Length
                 std::ostringstream oss;
@@ -287,15 +292,13 @@ int main(int argc, const char * argv[]) {
     }
     
     struct sockaddr_in myaddr;
-    /*if (argv[i]){
-     myaddr.sin_port = htons(argv[i]);
-     }else{*/
+
     if (argc > 1) {
         myaddr.sin_port = htons(atoi(argv[1]));
         std::cout << myaddr.sin_port << std::endl;
     }
     else{
-        myaddr.sin_port = htons(DEFAULT_PORT); // use port default of 8888
+        myaddr.sin_port = htons(DEFAULT_PORT); // use port default
     }
     myaddr.sin_family = AF_INET;
     myaddr.sin_addr.s_addr = htonl(INADDR_ANY);
