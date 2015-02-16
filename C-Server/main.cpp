@@ -27,12 +27,10 @@
 int openConnections = 0;
 timeval threadTimeout;
 
-struct threadStruct{
-    pthread_t pid;
-    time_t startTime;
+struct argStruct{
+    int newSocketfd;
+    char root[];
 };
-
-std::vector<threadStruct*> vectorThread;
 
 
 void error(const char *msg)
@@ -41,10 +39,10 @@ void error(const char *msg)
     exit(1);
 }
 
-void *handelRequest(void *sock_fd)
+void *handelRequest(void *inputStruct)
 {
-    
-    long sock = (long)sock_fd;
+    struct argStruct *inputArg = (struct argStruct *)inputStruct;
+    long sock = (long)inputArg->newSocketfd;
     std::cout << "Handeling Request! Socket Descriptor: "  << sock <<    std::endl;
     int requestNum = 0;
     char buffer[2000];
@@ -141,10 +139,10 @@ void *handelRequest(void *sock_fd)
                     openConnections--;
                 }
                 //HTTP request ok
-                char root[] = "/home/clu/site";
+                //char root[] = "/home/clu/site";
                 char fullPath[n];
-                for (int i = 0; i < strlen(root); i++) {
-                    fullPath[i] = root[i];
+                for (int i = 0; i < strlen(inputArg->root); i++) {
+                    fullPath[i] = inputArg->root[i];
                 }
                 //char root[]  = "/Users/thegreenfrog/Desktop/Systems/C-Server/C-Server/simple";
                 FILE *fs = fopen(strcat(fullPath,urlstr), "r");
@@ -290,12 +288,23 @@ int main(int argc, const char * argv[]) {
     /*if (argv[i]){
      myaddr.sin_port = htons(argv[i]);
      }else{*/
-    if (argc > 1) {
-        myaddr.sin_port = htons(atoi(argv[1]));
-        std::cout << myaddr.sin_port << std::endl;
+    char root[strlen(argv[1])];
+    if (argc == 5) {
+        strcpy(root, argv[2]);
+        if (strcmp(argv[3], "-port") == 0) {
+            myaddr.sin_port = htons(atoi(argv[4]));
+            std::cout << myaddr.sin_port << std::endl;
+        }
+        else
+        {
+            std::cout << "port option not specificied" << std::endl;
+            return 0;
+        }
     }
     else{
-        myaddr.sin_port = htons(DEFAULT_PORT); // use port default of 8888
+        std::cout << "Not enough arguments. Pass home directory path and port number" << std::endl;
+        return 0;
+        //myaddr.sin_port = htons(DEFAULT_PORT); // use port default of 8888
     }
     myaddr.sin_family = AF_INET;
     myaddr.sin_addr.s_addr = htonl(INADDR_ANY);
@@ -326,7 +335,12 @@ int main(int argc, const char * argv[]) {
         } else{
             pthread_t newThread;
             std::cout << "Creating  new thread " <<    std::endl;
-            int rc = pthread_create(&newThread, NULL, handelRequest, (void *)newSocketfd);
+            struct argStruct *inputStruct = new argStruct;
+            inputStruct->newSocketfd = newSocketfd;
+            for (int i = 0; i < strlen(root); i++) {
+                inputStruct->root[i] = root[i];
+            }
+            int rc = pthread_create(&newThread, NULL, handelRequest, (void *)inputStruct);
             if (rc){
                 std::cout << "Error:unable to create thread," << rc <<  std::endl;
                 exit(-1);
