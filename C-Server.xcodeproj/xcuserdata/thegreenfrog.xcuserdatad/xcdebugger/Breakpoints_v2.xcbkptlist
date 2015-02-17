@@ -15,7 +15,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "266"
             endingLineNumber = "266"
-            landmarkName = "main(int argc, const char * argv[])"
+            landmarkName = "handelRequest(void *inputStruct)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

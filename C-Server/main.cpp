@@ -69,8 +69,9 @@ void *handelRequest(void *inputStruct)
     threadTimeout.tv_sec = 60/openConnections;
     threadTimeout.tv_usec = 0;
     while (is11) {
-        
+        //reset full path to root path
         strcpy(fullPath, inputArg->root);
+        
         int num = select(sock+1, &readset, NULL, NULL, &threadTimeout);
         if(num >0)
         {//data present to read
@@ -91,11 +92,12 @@ void *handelRequest(void *inputStruct)
         }
 
         int i = 0;
+        
+        //get request type
         while (isalpha(buffer[i])) {
             requestType[i] = buffer[i];
             i++;
         }
-        std::cout << "request type: " << requestType << std::endl;
         if (strcmp(requestType, "GET") == 0) {
             //GET request present
             //skip space
@@ -118,7 +120,6 @@ void *handelRequest(void *inputStruct)
                 strcpy(urlstr, "/index.html");
             }
             i = start;
-            //MAKE SURE WE CHECK URL PATH FITS PATH PATTERN
             while (isspace(buffer[i])) {
                 i++;
             }
@@ -138,8 +139,8 @@ void *handelRequest(void *inputStruct)
                 }
                 //HTTP request ok
                 
+                //merge file path with root path
                 strcat(fullPath,urlstr);
-                puts(fullPath);
                 
                 FILE *fs = fopen(fullPath, "r");
 
@@ -156,7 +157,7 @@ void *handelRequest(void *inputStruct)
                         continue;
                     }
                 }
-                //clear buffer
+                //clear buffer since request parsed
                 memset(buffer, 0, 2000);
                 
                 std::string contents;
@@ -176,7 +177,6 @@ void *handelRequest(void *inputStruct)
                 }
                 memcpy(temp, contents.c_str(), contents.size() + 1);
                 
-                std::cout << "copies to temps" << std::endl;
                 if (!strcmp(httpstr, "HTTP/1.1")) {
                     //Send HTTP status to 1.1 client
                     send(sock, "HTTP/1.1 200 Ok\r\n", 18, 0);
@@ -190,6 +190,7 @@ void *handelRequest(void *inputStruct)
                 strftime (timebuf,80,"Date: %c \r\n",timeinfo);
                 send(sock, timebuf, 35, 0);
 
+                //handle different file types
                 if (!strcmp(filetype, ".html")) {
                     send(sock, "content-type: text/html\r\n", 26, 0);
                 }
