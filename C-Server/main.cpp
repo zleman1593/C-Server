@@ -44,20 +44,28 @@ void *handelRequest(void *inputStruct)
 {
     struct argStruct *inputArg = (struct argStruct *)inputStruct;
     long sock = (long)inputArg->newSocketfd;
-    std::cout << "Handeling Request! Socket Descriptor: "  << sock <<    std::endl;
+    
+    //variable that determines if request is malformed
+    //erases buffer and listens for other requests if malformed request
     int requestNum = 0;
     char buffer[2000];
     bzero(buffer,2000);
+    //keeps track of whether request was 1.1 or 1.0
     bool is11 = true;
     int n;
+    
+    //variables that hold parts of the request
     char* requestType = (char*) malloc(2000);
     char* urlstr = (char*) malloc(2000);
     char* httpstr = (char*) malloc(2000);
     char* filetype = (char*) malloc(2000);
     char* fullPath = (char*) malloc(2000);
+    
     fd_set readset;
     FD_ZERO(&readset);
     FD_SET(sock, &readset);
+    
+    //timeout value
     threadTimeout.tv_sec = 60/openConnections;
     threadTimeout.tv_usec = 0;
     while (is11) {
@@ -169,10 +177,10 @@ void *handelRequest(void *inputStruct)
                 memcpy(temp, contents.c_str(), contents.size() + 1);
                 
                 std::cout << "copies to temps" << std::endl;
-                //if (!strcmp(newHTTP, "HTTP/1.1")) {
+                if (!strcmp(httpstr, "HTTP/1.1")) {
                     //Send HTTP status to 1.1 client
                     send(sock, "HTTP/1.1 200 Ok\r\n", 18, 0);
-                //}
+                }
 
                 //Send Date
                 char timebuf [80];
