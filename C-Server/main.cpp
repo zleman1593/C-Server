@@ -20,7 +20,6 @@
 #include <cerrno>
 #include <vector>
 #include <time.h>
-#define DEFAULT_PORT 8887
 #define NUM_THREADS     5
 #define MAX_BACKLOG     10
 #define THREAD_TIMEOUT  60
@@ -39,6 +38,8 @@ void error(const char *msg)
     exit(1);
 }
 
+//thread that is called when connection is made with client.
+//Listens for requests while operating within timeout value
 void *handelRequest(void *inputStruct)
 {
     struct argStruct *inputArg = (struct argStruct *)inputStruct;
@@ -268,15 +269,13 @@ int main(int argc, const char * argv[]) {
     }
     
     struct sockaddr_in myaddr;
-    /*if (argv[i]){
-     myaddr.sin_port = htons(argv[i]);
-     }else{*/
     char root[strlen(argv[1])];
+    //ensure that a port # and root directory were passed
     if (argc == 5) {
         strcpy(root, argv[2]);
+        //make sure port was specified
         if (strcmp(argv[3], "-port") == 0) {
             myaddr.sin_port = htons(atoi(argv[4]));
-            std::cout << myaddr.sin_port << std::endl;
         }
         else
         {
@@ -287,7 +286,6 @@ int main(int argc, const char * argv[]) {
     else{
         std::cout << "Not enough arguments. Pass home directory path and port number" << std::endl;
         return 0;
-        //myaddr.sin_port = htons(DEFAULT_PORT); // use port default of 8888
     }
     myaddr.sin_family = AF_INET;
     myaddr.sin_addr.s_addr = htonl(INADDR_ANY);
@@ -297,7 +295,7 @@ int main(int argc, const char * argv[]) {
         // error opening socket
         return -1;
     }
-    
+    //listen for socket
     if(listen(sock_fd, MAX_BACKLOG) < 0)
     {
         std::cout << "Error while establishing listening socket" << std::endl;
@@ -306,18 +304,21 @@ int main(int argc, const char * argv[]) {
     
     int adressSize = sizeof(myaddr);
     int *size = &adressSize;
-    
+    //infinite loop
     while(true)
     {
         int newSocketfd = accept(sock_fd, (struct sockaddr*) &myaddr, (socklen_t *) size );
         
         if( newSocketfd < 0)
-        {
+        {//error accepting connection
             std::cout << "Error while accepting" << std::endl;
             return -1;
-        } else{
+        }
+        else
+        {//connection successful
             pthread_t newThread;
-            std::cout << "Creating  new thread " <<    std::endl;
+            std::cout << "Opened Connection " <<    std::endl;
+            //struct to pass as parameter in handelRequest
             struct argStruct *inputStruct = new argStruct;
             inputStruct->newSocketfd = newSocketfd;
             strcpy(inputStruct->root, root);
