@@ -86,11 +86,11 @@ void *handelRequest(void *inputStruct)
         }
         else
         {//thread has reached timeout. Kill
-             std::cout << "Closing Connection due to Timeout" << std::endl;
+            std::cout << "Closing Connection due to Timeout" << std::endl;
             pthread_exit(NULL);
             
         }
-
+        
         int i = 0;
         
         //get request type
@@ -130,7 +130,7 @@ void *handelRequest(void *inputStruct)
                 it++;
                 i++;
             }
-
+            
             //determine HTTP version
             if (strcmp(httpstr, "HTTP/1.0") == 0 || strcmp(httpstr, "HTTP/1.1") == 0) {
                 if(strcmp(httpstr, "HTTP/1.0") == 0){
@@ -143,7 +143,7 @@ void *handelRequest(void *inputStruct)
                 strcat(fullPath,urlstr);
                 
                 FILE *fs = fopen(fullPath, "r");
-
+                
                 if (fs == NULL) {
                     //could be 404, 403, 401
                     if (errno == EACCES){
@@ -181,7 +181,7 @@ void *handelRequest(void *inputStruct)
                     //Send HTTP status to 1.1 client
                     send(sock, "HTTP/1.1 200 Ok\r\n", 18, 0);
                 }
-
+                
                 //Send Date
                 char timebuf [80];
                 time_t currentTime;
@@ -189,7 +189,7 @@ void *handelRequest(void *inputStruct)
                 struct tm * timeinfo = localtime(&currentTime);
                 strftime (timebuf,80,"Date: %c \r\n",timeinfo);
                 send(sock, timebuf, 35, 0);
-
+                
                 //handle different file types
                 if (!strcmp(filetype, ".html")) {
                     send(sock, "content-type: text/html\r\n", 26, 0);
@@ -207,11 +207,11 @@ void *handelRequest(void *inputStruct)
                 } else if (!strcmp(filetype, ".txt")) {
                     send(sock, "content-type: text/plain\r\n", 27, 0);
                 }else if (!strcmp(filetype, ".css")) {
-                  send(sock, "content-type: text/css\r\n", 25, 0);
-                  }else if (!strcmp(filetype, ".js")) {
-                  send(sock, "content-type: text/javascript\r\n", 32, 0);
-                  }
-
+                    send(sock, "content-type: text/css\r\n", 25, 0);
+                }else if (!strcmp(filetype, ".js")) {
+                    send(sock, "content-type: text/javascript\r\n", 32, 0);
+                }
+                
                 //Send Content Length
                 std::ostringstream oss;
                 oss << "content-length: " << lSize << "\r\n\r\n";
@@ -251,7 +251,7 @@ void *handelRequest(void *inputStruct)
             else
             {
                 openConnections--;
-                 std::cout << "Closing Connection" << std::endl;
+                std::cout << "Closing Connection" << std::endl;
                 pthread_exit(NULL);
             }
         }
@@ -263,7 +263,7 @@ void *handelRequest(void *inputStruct)
         
     }
     openConnections--;
-     std::cout << "Closing Connection" << std::endl;
+    std::cout << "Closing Connection" << std::endl;
     pthread_exit(NULL);
 }
 
