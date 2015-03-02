@@ -28,7 +28,7 @@ timeval threadTimeout;
 
 struct argStruct{
     int newSocketfd;
-    char root[];
+    char root[2000];
 };
 
 
@@ -71,7 +71,6 @@ void *handelRequest(void *inputStruct)
     while (is11) {
         //reset full path to root path
         strcpy(fullPath, inputArg->root);
-        
         int num = select(sock+1, &readset, NULL, NULL, &threadTimeout);
         if(num >0)
         {//data present to read
@@ -141,7 +140,6 @@ void *handelRequest(void *inputStruct)
                 
                 //merge file path with root path
                 strcat(fullPath,urlstr);
-                
                 FILE *fs = fopen(fullPath, "r");
                 
                 if (fs == NULL) {
